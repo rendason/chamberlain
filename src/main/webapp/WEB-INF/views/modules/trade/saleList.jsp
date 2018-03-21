@@ -1,0 +1,94 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+<html>
+<head>
+	<title>销售管理</title>
+	<meta name="decorator" content="default"/>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			
+		});
+		function page(n,s){
+			$("#pageNo").val(n);
+			$("#pageSize").val(s);
+			$("#searchForm").submit();
+        	return false;
+        }
+	</script>
+</head>
+<body>
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="${ctx}/trade/sale/">销售列表</a></li>
+		<shiro:hasPermission name="trade:sale:edit"><li><a href="${ctx}/trade/sale/form">销售添加</a></li></shiro:hasPermission>
+	</ul>
+	<form:form id="searchForm" modelAttribute="sale" action="${ctx}/trade/sale/" method="post" class="breadcrumb form-search">
+		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
+		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
+		<ul class="ul-form">
+			<li><label>品名：</label>
+				<form:input path="name" htmlEscape="false" maxlength="50" class="input-medium"/>
+			</li>
+			<li><label>会员：</label>
+				<form:input path="memberId" htmlEscape="false" maxlength="64" class="input-medium"/>
+			</li>
+			<li><label>销售员：</label>
+				<sys:treeselect id="saler" name="saler.id" value="${sale.saler.id}" labelName="saler.name" labelValue="${sale.saler.name}"
+					title="用户" url="/sys/office/treeData?type=3" cssClass="input-small" allowClear="true" notAllowSelectParent="true"/>
+			</li>
+			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
+			<li class="clearfix"></li>
+		</ul>
+	</form:form>
+	<sys:message content="${message}"/>
+	<table id="contentTable" class="table table-striped table-bordered table-condensed">
+		<thead>
+			<tr>
+				<th>品名</th>
+				<th>数量</th>
+				<th>单价</th>
+				<th>单位</th>
+				<th>折扣</th>
+				<th>会员</th>
+				<th>销售员</th>
+				<th>备注</th>
+				<shiro:hasPermission name="trade:sale:edit"><th>操作</th></shiro:hasPermission>
+			</tr>
+		</thead>
+		<tbody>
+		<c:forEach items="${page.list}" var="sale">
+			<tr>
+				<td><a href="${ctx}/trade/sale/form?id=${sale.id}">
+					${sale.name}
+				</a></td>
+				<td>
+					${sale.quantity}
+				</td>
+				<td>
+					${sale.price}
+				</td>
+				<td>
+					${sale.unit}
+				</td>
+				<td>
+					${sale.disaccount}
+				</td>
+				<td>
+					${sale.memberId}
+				</td>
+				<td>
+					${sale.saler.name}
+				</td>
+				<td>
+					${sale.remark}
+				</td>
+				<shiro:hasPermission name="trade:sale:edit"><td>
+    				<a href="${ctx}/trade/sale/form?id=${sale.id}">修改</a>
+					<a href="${ctx}/trade/sale/delete?id=${sale.id}" onclick="return confirmx('确认要删除该销售吗？', this.href)">删除</a>
+				</td></shiro:hasPermission>
+			</tr>
+		</c:forEach>
+		</tbody>
+	</table>
+	<div class="pagination">${page}</div>
+</body>
+</html>

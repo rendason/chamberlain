@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.trade.dao.SaleDao">
+    
+	<sql id="saleColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.quantity AS "quantity",
+		a.price AS "price",
+		a.unit AS "unit",
+		a.disaccount AS "disaccount",
+		a.member_id AS "memberId",
+		a.saler_id AS "saler.id",
+		a.remark AS "remark",
+		u8.name AS "saler.name"
+	</sql>
+	
+	<sql id="saleJoins">
+		LEFT JOIN sys_user u8 ON u8.id = a.saler_id
+	</sql>
+    
+	<select id="get" resultType="Sale">
+		SELECT 
+			<include refid="saleColumns"/>
+		FROM cl_sale a
+		<include refid="saleJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Sale">
+		SELECT 
+			<include refid="saleColumns"/>
+		FROM cl_sale a
+		<include refid="saleJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="memberId != null and memberId != ''">
+				AND a.member_id = #{memberId}
+			</if>
+			<if test="saler != null and saler.id != null and saler.id != ''">
+				AND a.saler_id = #{saler.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Sale">
+		SELECT 
+			<include refid="saleColumns"/>
+		FROM cl_sale a
+		<include refid="saleJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cl_sale(
+			id,
+			name,
+			quantity,
+			price,
+			unit,
+			disaccount,
+			member_id,
+			saler_id,
+			remark
+		) VALUES (
+			#{id},
+			#{name},
+			#{quantity},
+			#{price},
+			#{unit},
+			#{disaccount},
+			#{memberId},
+			#{saler.id},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cl_sale SET 	
+			name = #{name},
+			quantity = #{quantity},
+			price = #{price},
+			unit = #{unit},
+			disaccount = #{disaccount},
+			member_id = #{memberId},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM cl_sale
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
