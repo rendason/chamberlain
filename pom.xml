@@ -8,7 +8,7 @@
 	<version>1.2.7</version>
 	<packaging>war</packaging>
 
-	<name>JeeSite</name>
+	<name>Chamberlain</name>
 	<url>http://thinkgem.github.com/jeesite</url>
 	<inceptionYear>2012-2016</inceptionYear>
 
@@ -58,7 +58,7 @@
 	</properties>
 
 	<!-- 设定主仓库，按设定顺序进行查找。 -->
-	<repositories>
+	<!--<repositories>
 
 		<repository>
 			<id>jeesite-repos</id>
@@ -66,10 +66,10 @@
 			<url>http://maven.aliyun.com/nexus/content/groups/public</url>
 		</repository>
 
-	</repositories>
+	</repositories>-->
 
 	<!-- 设定插件仓库 -->
-	<pluginRepositories>
+	<!--<pluginRepositories>
 
 		<pluginRepository>
 			<id>jeesite-repos</id>
@@ -77,7 +77,7 @@
 			<url>http://maven.aliyun.com/nexus/content/groups/public</url>
 		</pluginRepository>
 
-	</pluginRepositories>
+	</pluginRepositories>-->
 
 	<!-- 依赖项定义 -->
 	<dependencies>
@@ -544,8 +544,6 @@
 			<groupId>net.coobird</groupId>
 			<artifactId>thumbnailator</artifactId>
 			<version>0.4.2</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/thumbnailator-0.4.2.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.ckfinder</groupId>
