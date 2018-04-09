@@ -6,6 +6,8 @@ package com.thinkgem.jeesite.modules.trade.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.thinkgem.jeesite.modules.assets.entity.Cash;
+import com.thinkgem.jeesite.modules.assets.service.CashService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,9 +25,9 @@ import com.thinkgem.jeesite.modules.trade.entity.Purchase;
 import com.thinkgem.jeesite.modules.trade.service.PurchaseService;
 
 /**
- * 购买Controller
- * @author maokeluo
- * @version 2018-03-22
+ * 采购Controller
+ * @author dason
+ * @version 2018-04-09
  */
 @Controller
 @RequestMapping(value = "${adminPath}/trade/purchase")
@@ -33,6 +35,9 @@ public class PurchaseController extends BaseController {
 
 	@Autowired
 	private PurchaseService purchaseService;
+
+	@Autowired
+	private CashService cashService;
 	
 	@ModelAttribute
 	public Purchase get(@RequestParam(required=false) String id) {
@@ -58,6 +63,7 @@ public class PurchaseController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(Purchase purchase, Model model) {
 		model.addAttribute("purchase", purchase);
+		model.addAttribute("payments", cashService.findList(new Cash()));
 		return "modules/trade/purchaseForm";
 	}
 
@@ -68,7 +74,7 @@ public class PurchaseController extends BaseController {
 			return form(purchase, model);
 		}
 		purchaseService.save(purchase);
-		addMessage(redirectAttributes, "保存购买成功");
+		addMessage(redirectAttributes, "保存采购成功");
 		return "redirect:"+Global.getAdminPath()+"/trade/purchase/?repage";
 	}
 	
@@ -76,7 +82,7 @@ public class PurchaseController extends BaseController {
 	@RequestMapping(value = "delete")
 	public String delete(Purchase purchase, RedirectAttributes redirectAttributes) {
 		purchaseService.delete(purchase);
-		addMessage(redirectAttributes, "删除购买成功");
+		addMessage(redirectAttributes, "删除采购成功");
 		return "redirect:"+Global.getAdminPath()+"/trade/purchase/?repage";
 	}
 

@@ -24,8 +24,8 @@ import com.thinkgem.jeesite.modules.salary.service.MonthlySalaryService;
 
 /**
  * 月度薪资Controller
- * @author maokeluo
- * @version 2018-03-22
+ * @author dason
+ * @version 2018-04-09
  */
 @Controller
 @RequestMapping(value = "${adminPath}/salary/monthlySalary")

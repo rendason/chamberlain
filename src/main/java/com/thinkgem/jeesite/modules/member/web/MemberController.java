@@ -24,8 +24,8 @@ import com.thinkgem.jeesite.modules.member.service.MemberService;
 
 /**
  * 会员Controller
- * @author maokeluo
- * @version 2018-03-22
+ * @author dason
+ * @version 2018-04-09
  */
 @Controller
 @RequestMapping(value = "${adminPath}/member/member")

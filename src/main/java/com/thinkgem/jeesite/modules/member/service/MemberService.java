@@ -15,8 +15,8 @@ import com.thinkgem.jeesite.modules.member.dao.MemberDao;
 
 /**
  * 会员Service
- * @author maokeluo
- * @version 2018-03-22
+ * @author dason
+ * @version 2018-04-09
  */
 @Service
 @Transactional(readOnly = true)

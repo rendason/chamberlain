@@ -25,15 +25,18 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
-			<li><label>品名：</label>
-				<form:input path="name" htmlEscape="false" maxlength="50" class="input-medium"/>
+			<li><label>销售员：</label>
+				<sys:treeselect id="user" name="user.id" value="${sale.user.id}" labelName="user.name" labelValue="${sale.user.name}"
+					title="用户" url="/sys/office/treeData?type=3" cssClass="input-small" allowClear="true" notAllowSelectParent="true"/>
 			</li>
 			<li><label>会员：</label>
-				<form:input path="memberId" htmlEscape="false" maxlength="64" class="input-medium"/>
+				<form:select path="member.id" class="input-medium">
+                    <form:option value="" label=""/>
+                    <form:options items="${members}" itemLabel="name" itemValue="id" htmlEscape="false"/>
+                </form:select>
 			</li>
-			<li><label>销售员：</label>
-				<sys:treeselect id="saler" name="saler.id" value="${sale.saler.id}" labelName="saler.name" labelValue="${sale.saler.name}"
-					title="用户" url="/sys/office/treeData?type=3" cssClass="input-small" allowClear="true" notAllowSelectParent="true"/>
+			<li><label>名称：</label>
+				<form:input path="name" htmlEscape="false" maxlength="50" class="input-medium"/>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
@@ -43,13 +46,14 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<th>品名</th>
-				<th>数量</th>
-				<th>单价</th>
-				<th>单位</th>
-				<th>折扣</th>
-				<th>会员</th>
 				<th>销售员</th>
+				<th>会员</th>
+				<th>名称</th>
+				<th>数量</th>
+				<th>单位</th>
+				<th>价格</th>
+				<th>折扣</th>
+				<th>减免</th>
 				<th>备注</th>
 				<shiro:hasPermission name="trade:sale:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
@@ -58,25 +62,28 @@
 		<c:forEach items="${page.list}" var="sale">
 			<tr>
 				<td><a href="${ctx}/trade/sale/form?id=${sale.id}">
-					${sale.name}
+					${sale.user.name}
 				</a></td>
 				<td>
-					${sale.quantity}
+					${sale.member.name}
 				</td>
 				<td>
-					${sale.price}
+					${sale.name}
+				</td>
+				<td>
+					${sale.quantity}
 				</td>
 				<td>
 					${sale.unit}
 				</td>
 				<td>
+					${sale.price}
+				</td>
+				<td>
 					${sale.disaccount}
 				</td>
 				<td>
-					${sale.memberId}
-				</td>
-				<td>
-					${sale.saler.name}
+					${sale.exempt}
 				</td>
 				<td>
 					${sale.remark}

@@ -19,8 +19,8 @@ import com.thinkgem.jeesite.modules.salary.dao.MonthlySalaryItemDao;
 
 /**
  * 月度薪资Service
- * @author maokeluo
- * @version 2018-03-22
+ * @author dason
+ * @version 2018-04-09
  */
 @Service
 @Transactional(readOnly = true)
@@ -52,7 +52,7 @@ public class MonthlySalaryService extends CrudService<MonthlySalaryDao, MonthlyS
 			}
 			if (MonthlySalaryItem.DEL_FLAG_NORMAL.equals(monthlySalaryItem.getDelFlag())){
 				if (StringUtils.isBlank(monthlySalaryItem.getId())){
-					monthlySalaryItem.setMonthlySalary(monthlySalary);
+					monthlySalaryItem.setSalary(monthlySalary);
 					monthlySalaryItem.preInsert();
 					monthlySalaryItemDao.insert(monthlySalaryItem);
 				}else{

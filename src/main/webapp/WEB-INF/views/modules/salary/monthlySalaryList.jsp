@@ -35,6 +35,9 @@
 			<li><label>月：</label>
 				<form:input path="month" htmlEscape="false" maxlength="11" class="input-medium"/>
 			</li>
+			<li><label>支付：</label>
+				<form:radiobuttons path="paid" items="${fns:getDictList('monthly_salary_paid')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
 		</ul>
@@ -46,7 +49,7 @@
 				<th>用户</th>
 				<th>年</th>
 				<th>月</th>
-				<th>是否支付</th>
+				<th>支付</th>
 				<shiro:hasPermission name="salary:monthlySalary:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -63,7 +66,7 @@
 					${monthlySalary.month}
 				</td>
 				<td>
-					${fns:getDictLabel(monthlySalary.paid, 'salary_paid', '')}
+					${fns:getDictLabel(monthlySalary.paid, 'monthly_salary_paid', '')}
 				</td>
 				<shiro:hasPermission name="salary:monthlySalary:edit"><td>
     				<a href="${ctx}/salary/monthlySalary/form?id=${monthlySalary.id}">修改</a>

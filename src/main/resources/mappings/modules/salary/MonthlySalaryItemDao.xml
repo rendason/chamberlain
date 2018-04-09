@@ -4,7 +4,7 @@
     
 	<sql id="monthlySalaryItemColumns">
 		a.id AS "id",
-		a.salary_id AS "monthlySalary.id",
+		a.salary_id AS "salary.id",
 		a.name AS "name",
 		a.amount AS "amount",
 		a.coefficient AS "coefficient"
@@ -29,8 +29,8 @@
 		<include refid="monthlySalaryItemJoins"/>
 		<where>
 			
-			<if test="monthlySalary != null and monthlySalary.id != null and monthlySalary.id != ''">
-				AND a.salary_id = #{monthlySalary.id}
+			<if test="salary != null and salary.id != null and salary.id != ''">
+				AND a.salary_id = #{salary.id}
 			</if>
 			<if test="name != null and name != ''">
 				AND a.name LIKE 
@@ -74,7 +74,7 @@
 			coefficient
 		) VALUES (
 			#{id},
-			#{monthlySalary.id},
+			#{salary.id},
 			#{name},
 			#{amount},
 			#{coefficient}
@@ -83,7 +83,7 @@
 	
 	<update id="update">
 		UPDATE cl_monthly_salary_item SET 	
-			salary_id = #{monthlySalary.id},
+			salary_id = #{salary.id},
 			name = #{name},
 			amount = #{amount},
 			coefficient = #{coefficient}
@@ -97,7 +97,7 @@
 				WHERE id = #{id}
 			</when>
 			<otherwise>
-				WHERE salary_id = #{monthlySalary.id}
+				WHERE salary_id = #{salary.id}
 			</otherwise>
 		</choose>
 	</update>

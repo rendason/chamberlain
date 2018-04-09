@@ -9,8 +9,8 @@ import com.thinkgem.jeesite.modules.trade.entity.Sale;
 
 /**
  * 销售DAO接口
- * @author maokeluo
- * @version 2018-03-22
+ * @author dason
+ * @version 2018-04-09
  */
 @MyBatisDao
 public interface SaleDao extends CrudDao<Sale> {

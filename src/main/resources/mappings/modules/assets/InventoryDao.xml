@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.assets.dao.InventoryDao">
+    
+	<sql id="inventoryColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.category AS "category",
+		a.quantity AS "quantity",
+		a.unit AS "unit",
+		a.cost_price AS "costPrice",
+		a.selling_price AS "sellingPrice",
+		a.sales AS "sales",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="inventoryJoins">
+	</sql>
+    
+	<select id="get" resultType="Inventory">
+		SELECT 
+			<include refid="inventoryColumns"/>
+		FROM cl_inventory a
+		<include refid="inventoryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findOne" resultType="Inventory">
+		SELECT
+		<include refid="inventoryColumns"/>
+		FROM cl_inventory a
+		<include refid="inventoryJoins"/>
+		<where>
+
+			<if test="name != null and name != ''">
+				AND a.name = #{name}
+			</if>
+			<if test="unit != null and unit != ''">
+				AND a.unit = #{unit}
+			</if>
+			<if test="costPrice != null">
+				AND a.cost_price = #{costPrice}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findList" resultType="Inventory">
+		SELECT 
+			<include refid="inventoryColumns"/>
+		FROM cl_inventory a
+		<include refid="inventoryJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="category != null and category != ''">
+				AND a.category = #{category}
+			</if>
+			<if test="sales != null and sales != ''">
+				AND a.sales = #{sales}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Inventory">
+		SELECT 
+			<include refid="inventoryColumns"/>
+		FROM cl_inventory a
+		<include refid="inventoryJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cl_inventory(
+			id,
+			name,
+			category,
+			quantity,
+			unit,
+			cost_price,
+			selling_price,
+			sales,
+			remark
+		) VALUES (
+			#{id},
+			#{name},
+			#{category},
+			#{quantity},
+			#{unit},
+			#{costPrice},
+			#{sellingPrice},
+			#{sales},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cl_inventory SET 	
+			name = #{name},
+			category = #{category},
+			quantity = #{quantity},
+			unit = #{unit},
+			cost_price = #{costPrice},
+			selling_price = #{sellingPrice},
+			sales = #{sales},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM cl_inventory
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

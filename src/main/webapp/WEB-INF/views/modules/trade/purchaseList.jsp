@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>购买管理</title>
+	<title>采购管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -18,22 +18,25 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/trade/purchase/">购买列表</a></li>
-		<shiro:hasPermission name="trade:purchase:edit"><li><a href="${ctx}/trade/purchase/form">购买添加</a></li></shiro:hasPermission>
+		<li class="active"><a href="${ctx}/trade/purchase/">采购列表</a></li>
+		<shiro:hasPermission name="trade:purchase:edit"><li><a href="${ctx}/trade/purchase/form">采购添加</a></li></shiro:hasPermission>
 	</ul>
 	<form:form id="searchForm" modelAttribute="purchase" action="${ctx}/trade/purchase/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
-			<li><label>品名：</label>
-				<form:input path="name" htmlEscape="false" maxlength="50" class="input-medium"/>
-			</li>
-			<li><label>卖方：</label>
-				<form:input path="saler" htmlEscape="false" maxlength="50" class="input-medium"/>
-			</li>
-			<li><label>买方：</label>
-				<sys:treeselect id="consumer" name="consumer.id" value="${purchase.consumer.id}" labelName="consumer.name" labelValue="${purchase.consumer.name}"
+			<li><label>采购员：</label>
+				<sys:treeselect id="user" name="user.id" value="${purchase.user.id}" labelName="user.name" labelValue="${purchase.user.name}"
 					title="用户" url="/sys/office/treeData?type=3" cssClass="input-small" allowClear="true" notAllowSelectParent="true"/>
+			</li>
+			<li><label>资产类型：</label>
+				<form:radiobuttons path="type" items="${fns:getDictList('purchase_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+			</li>
+			<li><label>供货商：</label>
+				<form:input path="seller" htmlEscape="false" maxlength="50" class="input-medium"/>
+			</li>
+			<li><label>名称：</label>
+				<form:input path="name" htmlEscape="false" maxlength="50" class="input-medium"/>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
@@ -43,12 +46,14 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
-				<th>品名</th>
+				<th>采购员</th>
+				<th>资产类型</th>
+				<th>供货商</th>
+				<th>名称</th>
 				<th>数量</th>
-				<th>单价</th>
 				<th>单位</th>
-				<th>卖方</th>
-				<th>买方</th>
+				<th>价格</th>
+				<th>支付方式</th>
 				<th>备注</th>
 				<shiro:hasPermission name="trade:purchase:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
@@ -57,29 +62,35 @@
 		<c:forEach items="${page.list}" var="purchase">
 			<tr>
 				<td><a href="${ctx}/trade/purchase/form?id=${purchase.id}">
-					${purchase.name}
+					${purchase.user.name}
 				</a></td>
 				<td>
-					${purchase.quantity}
+					${fns:getDictLabel(purchase.type, 'purchase_type', '')}
 				</td>
 				<td>
-					${purchase.price}
+					${purchase.seller}
+				</td>
+				<td>
+					${purchase.name}
+				</td>
+				<td>
+					${purchase.quantity}
 				</td>
 				<td>
 					${purchase.unit}
 				</td>
 				<td>
-					${purchase.saler}
+					${purchase.price}
 				</td>
 				<td>
-					${purchase.consumer.name}
+					${purchase.payment.name}
 				</td>
 				<td>
 					${purchase.remark}
 				</td>
 				<shiro:hasPermission name="trade:purchase:edit"><td>
     				<a href="${ctx}/trade/purchase/form?id=${purchase.id}">修改</a>
-					<a href="${ctx}/trade/purchase/delete?id=${purchase.id}" onclick="return confirmx('确认要删除该购买吗？', this.href)">删除</a>
+					<a href="${ctx}/trade/purchase/delete?id=${purchase.id}" onclick="return confirmx('确认要删除该采购吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

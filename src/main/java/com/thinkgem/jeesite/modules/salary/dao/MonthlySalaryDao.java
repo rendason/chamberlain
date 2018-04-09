@@ -9,8 +9,8 @@ import com.thinkgem.jeesite.modules.salary.entity.MonthlySalary;
 
 /**
  * 月度薪资DAO接口
- * @author maokeluo
- * @version 2018-03-22
+ * @author dason
+ * @version 2018-04-09
  */
 @MyBatisDao
 public interface MonthlySalaryDao extends CrudDao<MonthlySalary> {

@@ -3,43 +3,39 @@
  */
 package com.thinkgem.jeesite.modules.salary.entity;
 
-import org.hibernate.validator.constraints.Length;
+import com.thinkgem.jeesite.modules.sys.entity.User;
 import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 
 import com.thinkgem.jeesite.common.persistence.DataEntity;
 
 /**
- * 月度薪资Entity
+ * 标准薪资Entity
  * @author dason
  * @version 2018-04-09
  */
-public class MonthlySalaryItem extends DataEntity<MonthlySalaryItem> {
+public class BaseSalaryItem extends DataEntity<BaseSalaryItem> {
 	
 	private static final long serialVersionUID = 1L;
-	private MonthlySalary salary;		// salary_id 父类
+	private User user;		// 用户
 	private String name;		// 名称
 	private Double amount;		// 金额
-	private Integer coefficient;		// 类型
 	
-	public MonthlySalaryItem() {
+	public BaseSalaryItem() {
 		super();
 	}
 
-	public MonthlySalaryItem(String id){
+	public BaseSalaryItem(String id){
 		super(id);
 	}
 
-	public MonthlySalaryItem(MonthlySalary salary){
-		this.salary = salary;
+	@NotNull(message="用户不能为空")
+	public User getUser() {
+		return user;
 	}
 
-	@Length(min=1, max=64, message="salary_id长度必须介于 1 和 64 之间")
-	public MonthlySalary getSalary() {
-		return salary;
-	}
-
-	public void setSalary(MonthlySalary salary) {
-		this.salary = salary;
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 	@Length(min=1, max=50, message="名称长度必须介于 1 和 50 之间")
@@ -58,15 +54,6 @@ public class MonthlySalaryItem extends DataEntity<MonthlySalaryItem> {
 
 	public void setAmount(Double amount) {
 		this.amount = amount;
-	}
-	
-	@NotNull(message="类型不能为空")
-	public Integer getCoefficient() {
-		return coefficient;
-	}
-
-	public void setCoefficient(Integer coefficient) {
-		this.coefficient = coefficient;
 	}
 	
 }

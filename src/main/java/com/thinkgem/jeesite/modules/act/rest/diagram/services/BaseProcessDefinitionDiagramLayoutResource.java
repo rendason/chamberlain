@@ -246,6 +246,7 @@ public class BaseProcessDefinitionDiagramLayoutResource {
 		return highLightedFlows;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void getActivity(String processInstanceId, ActivityImpl activity, ArrayNode activityArray, ArrayNode sequenceFlowArray,
 			ProcessInstance processInstance, List<String> highLightedFlows, Map<String, ObjectNode> subProcessInstanceMap) {
 

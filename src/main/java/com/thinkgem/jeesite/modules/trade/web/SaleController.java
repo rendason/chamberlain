@@ -6,6 +6,12 @@ package com.thinkgem.jeesite.modules.trade.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.thinkgem.jeesite.modules.assets.entity.Cash;
+import com.thinkgem.jeesite.modules.assets.entity.Inventory;
+import com.thinkgem.jeesite.modules.assets.service.CashService;
+import com.thinkgem.jeesite.modules.assets.service.InventoryService;
+import com.thinkgem.jeesite.modules.member.entity.Member;
+import com.thinkgem.jeesite.modules.member.service.MemberService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,8 +30,8 @@ import com.thinkgem.jeesite.modules.trade.service.SaleService;
 
 /**
  * 销售Controller
- * @author maokeluo
- * @version 2018-03-22
+ * @author dason
+ * @version 2018-04-09
  */
 @Controller
 @RequestMapping(value = "${adminPath}/trade/sale")
@@ -33,6 +39,15 @@ public class SaleController extends BaseController {
 
 	@Autowired
 	private SaleService saleService;
+
+	@Autowired
+	private MemberService memberService;
+
+	@Autowired
+	private CashService cashService;
+
+	@Autowired
+	private InventoryService inventoryService;
 	
 	@ModelAttribute
 	public Sale get(@RequestParam(required=false) String id) {
@@ -51,6 +66,7 @@ public class SaleController extends BaseController {
 	public String list(Sale sale, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<Sale> page = saleService.findPage(new Page<Sale>(request, response), sale); 
 		model.addAttribute("page", page);
+		model.addAttribute("members", memberService.findList(new Member()));
 		return "modules/trade/saleList";
 	}
 
@@ -58,6 +74,9 @@ public class SaleController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(Sale sale, Model model) {
 		model.addAttribute("sale", sale);
+		model.addAttribute("members", memberService.findList(new Member()));
+		model.addAttribute("inventories", inventoryService.findList(new Inventory()));
+		model.addAttribute("receipts", cashService.findList(new Cash()));
 		return "modules/trade/saleForm";
 	}
 

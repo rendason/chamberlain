@@ -87,20 +87,20 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">是否支付：</label>
+			<label class="control-label">支付：</label>
 			<div class="controls">
-				<form:radiobuttons path="paid" items="${fns:getDictList('salary_paid')}" itemLabel="label" itemValue="value" htmlEscape="false" class="required"/>
+				<form:radiobuttons path="paid" items="${fns:getDictList('monthly_salary_paid')}" itemLabel="label" itemValue="value" htmlEscape="false" class="required"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 			<div class="control-group">
-				<label class="control-label">月度薪资项目：</label>
+				<label class="control-label">月度薪资条目：</label>
 				<div class="controls">
 					<table id="contentTable" class="table table-striped table-bordered table-condensed">
 						<thead>
 							<tr>
 								<th class="hide"></th>
-								<th>名字</th>
+								<th>名称</th>
 								<th>金额</th>
 								<th>类型</th>
 								<shiro:hasPermission name="salary:monthlySalary:edit"><th width="10">&nbsp;</th></shiro:hasPermission>
@@ -125,7 +125,7 @@
 								<input id="monthlySalaryItemList{{idx}}_amount" name="monthlySalaryItemList[{{idx}}].amount" type="text" value="{{row.amount}}" class="input-small required number"/>
 							</td>
 							<td>
-								<c:forEach items="${fns:getDictList('salary_item_coefficient')}" var="dict" varStatus="dictStatus">
+								<c:forEach items="${fns:getDictList('monthly_salary_item_coefficient')}" var="dict" varStatus="dictStatus">
 									<span><input id="monthlySalaryItemList{{idx}}_coefficient${dictStatus.index}" name="monthlySalaryItemList[{{idx}}].coefficient" type="radio" value="${dict.value}" data-value="{{row.coefficient}}"><label for="monthlySalaryItemList{{idx}}_coefficient${dictStatus.index}">${dict.label}</label></span>
 								</c:forEach>
 							</td>

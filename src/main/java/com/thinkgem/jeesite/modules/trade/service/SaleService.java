@@ -15,8 +15,8 @@ import com.thinkgem.jeesite.modules.trade.dao.SaleDao;
 
 /**
  * 销售Service
- * @author maokeluo
- * @version 2018-03-22
+ * @author dason
+ * @version 2018-04-09
  */
 @Service
 @Transactional(readOnly = true)
@@ -36,9 +36,8 @@ public class SaleService extends CrudService<SaleDao, Sale> {
 	
 	@Transactional(readOnly = false)
 	public void save(Sale sale) {
-		if (sale.getSaler() == null) {
-			sale.setSaler(sale.getCurrentUser());
-		}
+		if (sale.getDisaccount() == null) sale.setDisaccount(1.0);
+		if (sale.getExempt() == null) sale.setExempt(0.0);
 		super.save(sale);
 	}
 	

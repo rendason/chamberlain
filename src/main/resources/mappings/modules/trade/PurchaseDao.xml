@@ -4,18 +4,22 @@
     
 	<sql id="purchaseColumns">
 		a.id AS "id",
+		a.consumer_id AS "user.id",
+		a.type AS "type",
+		a.seller AS "seller",
 		a.name AS "name",
 		a.quantity AS "quantity",
-		a.price AS "price",
 		a.unit AS "unit",
-		a.saler AS "saler",
-		a.consumer AS "consumer.id",
+		a.price AS "price",
+		a.payment_id AS "payment.id",
 		a.remark AS "remark",
-		u7.name AS "consumer.name"
+		u2.name AS "user.name",
+		c.name AS "payment.name"
 	</sql>
 	
 	<sql id="purchaseJoins">
-		LEFT JOIN sys_user u7 ON u7.id = a.consumer
+		LEFT JOIN sys_user u2 ON u2.id = a.consumer_id
+		LEFT JOIN cl_cash c ON c.id = a.payment_id
 	</sql>
     
 	<select id="get" resultType="Purchase">
@@ -33,20 +37,20 @@
 		<include refid="purchaseJoins"/>
 		<where>
 			
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.consumer_id = #{user.id}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="seller != null and seller != ''">
+				AND a.seller = #{seller}
+			</if>
 			<if test="name != null and name != ''">
 				AND a.name LIKE 
 					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
 					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
 					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
-			</if>
-			<if test="saler != null and saler != ''">
-				AND a.saler LIKE 
-					<if test="dbName == 'oracle'">'%'||#{saler}||'%'</if>
-					<if test="dbName == 'mssql'">'%'+#{saler}+'%'</if>
-					<if test="dbName == 'mysql'">concat('%',#{saler},'%')</if>
-			</if>
-			<if test="consumer != null and consumer.id != null and consumer.id != ''">
-				AND a.consumer = #{consumer.id}
 			</if>
 		</where>
 		<choose>
@@ -78,32 +82,39 @@
 	<insert id="insert">
 		INSERT INTO cl_purchase(
 			id,
+			consumer_id,
+			type,
+			seller,
 			name,
 			quantity,
-			price,
 			unit,
-			saler,
-			consumer,
+			price,
+			payment_id,
 			remark
 		) VALUES (
 			#{id},
+			#{user.id},
+			#{type},
+			#{seller},
 			#{name},
 			#{quantity},
-			#{price},
 			#{unit},
-			#{saler},
-			#{consumer.id},
+			#{price},
+			#{payment.id},
 			#{remark}
 		)
 	</insert>
 	
 	<update id="update">
 		UPDATE cl_purchase SET 	
+			consumer_id = #{user.id},
+			type = #{type},
+			seller = #{seller},
 			name = #{name},
 			quantity = #{quantity},
-			price = #{price},
 			unit = #{unit},
-			saler = #{saler},
+			price = #{price},
+			payment_id = #{payment.id},
 			remark = #{remark}
 		WHERE id = #{id}
 	</update>

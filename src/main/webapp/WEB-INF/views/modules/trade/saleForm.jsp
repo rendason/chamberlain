@@ -34,9 +34,29 @@
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>		
 		<div class="control-group">
-			<label class="control-label">品名：</label>
+			<label class="control-label">销售员：</label>
 			<div class="controls">
-				<form:input path="name" htmlEscape="false" maxlength="50" class="input-xlarge required"/>
+				<sys:treeselect id="user" name="user.id" value="${sale.user.id}" labelName="user.name" labelValue="${sale.user.name}"
+					title="用户" url="/sys/office/treeData?type=3" cssClass="required" allowClear="true" notAllowSelectParent="true"/>
+				<span class="help-inline"><font color="red">*</font> </span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">会员：</label>
+			<div class="controls">
+				<form:select path="member.id" class="input-xlarge">
+                    <form:option value="" label=""/>
+                    <form:options items="${members}" itemLabel="name" itemValue="id" htmlEscape="false"/>
+                </form:select>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">名称：</label>
+			<div class="controls">
+				<form:select path="name" class="input-xlarge require">
+                    <form:option value="" label=""/>
+                    <form:options items="${inventories}" itemLabel="name" itemValue="name" htmlEscape="false"/>
+                </form:select>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
@@ -48,16 +68,16 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">单价：</label>
+			<label class="control-label">单位：</label>
 			<div class="controls">
-				<form:input path="price" htmlEscape="false" class="input-xlarge required number"/>
+				<form:input path="unit" htmlEscape="false" maxlength="20" class="input-xlarge required"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">单位：</label>
+			<label class="control-label">价格：</label>
 			<div class="controls">
-				<form:input path="unit" htmlEscape="false" maxlength="20" class="input-xlarge required"/>
+				<form:input path="price" htmlEscape="false" class="input-xlarge required number"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
@@ -68,11 +88,20 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">会员：</label>
+			<label class="control-label">减免：</label>
 			<div class="controls">
-				<form:input path="memberId" htmlEscape="false" maxlength="64" class="input-xlarge "/>
+				<form:input path="exempt" htmlEscape="false" class="input-xlarge  number"/>
 			</div>
 		</div>
+		<div class="control-group">
+            <label class="control-label">收款方式：</label>
+            <div class="controls">
+                <form:select path="receipt.id" class="input-xlarge required">
+                    <form:option value="" label=""/>
+                    <form:options items="${receipts}" itemLabel="name" itemValue="id" htmlEscape="false"/>
+                </form:select>
+            </div>
+        </div>
 		<div class="control-group">
 			<label class="control-label">备注：</label>
 			<div class="controls">

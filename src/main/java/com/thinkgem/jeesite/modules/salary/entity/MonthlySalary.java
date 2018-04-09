@@ -5,6 +5,7 @@ package com.thinkgem.jeesite.modules.salary.entity;
 
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 import java.util.List;
 import com.google.common.collect.Lists;
 
@@ -12,8 +13,8 @@ import com.thinkgem.jeesite.common.persistence.DataEntity;
 
 /**
  * 月度薪资Entity
- * @author maokeluo
- * @version 2018-03-22
+ * @author dason
+ * @version 2018-04-09
  */
 public class MonthlySalary extends DataEntity<MonthlySalary> {
 	
@@ -21,7 +22,7 @@ public class MonthlySalary extends DataEntity<MonthlySalary> {
 	private User user;		// 用户
 	private Integer year;		// 年
 	private Integer month;		// 月
-	private Integer paid;		// 是否支付
+	private String paid;		// 支付
 	private List<MonthlySalaryItem> monthlySalaryItemList = Lists.newArrayList();		// 子表列表
 	
 	public MonthlySalary() {
@@ -59,12 +60,12 @@ public class MonthlySalary extends DataEntity<MonthlySalary> {
 		this.month = month;
 	}
 	
-	@NotNull(message="是否支付不能为空")
-	public Integer getPaid() {
+	@Length(min=1, max=1, message="支付长度必须介于 1 和 1 之间")
+	public String getPaid() {
 		return paid;
 	}
 
-	public void setPaid(Integer paid) {
+	public void setPaid(String paid) {
 		this.paid = paid;
 	}
 	

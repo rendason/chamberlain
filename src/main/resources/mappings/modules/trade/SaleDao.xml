@@ -4,19 +4,23 @@
     
 	<sql id="saleColumns">
 		a.id AS "id",
+		a.seller_id AS "user.id",
+		a.member_id AS "member.id",
 		a.name AS "name",
 		a.quantity AS "quantity",
-		a.price AS "price",
 		a.unit AS "unit",
+		a.price AS "price",
 		a.disaccount AS "disaccount",
-		a.member_id AS "memberId",
-		a.saler_id AS "saler.id",
+		a.exempt AS "exempt",
+		a.receipt_id AS "receipt.id",
 		a.remark AS "remark",
-		u8.name AS "saler.name"
+		u2.name AS "user.name",
+		m.name AS "member.name"
 	</sql>
 	
 	<sql id="saleJoins">
-		LEFT JOIN sys_user u8 ON u8.id = a.saler_id
+		LEFT JOIN sys_user u2 ON u2.id = a.seller_id
+		LEFT JOIN cl_member m ON m.id = a.member_id
 	</sql>
     
 	<select id="get" resultType="Sale">
@@ -34,17 +38,17 @@
 		<include refid="saleJoins"/>
 		<where>
 			
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.seller_id = #{user.id}
+			</if>
+			<if test="member != null and member.id != null and member.id != ''">
+				AND a.member_id = #{member.id}
+			</if>
 			<if test="name != null and name != ''">
 				AND a.name LIKE 
 					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
 					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
 					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
-			</if>
-			<if test="memberId != null and memberId != ''">
-				AND a.member_id = #{memberId}
-			</if>
-			<if test="saler != null and saler.id != null and saler.id != ''">
-				AND a.saler_id = #{saler.id}
 			</if>
 		</where>
 		<choose>
@@ -76,35 +80,42 @@
 	<insert id="insert">
 		INSERT INTO cl_sale(
 			id,
+			seller_id,
+			member_id,
 			name,
 			quantity,
-			price,
 			unit,
+			price,
 			disaccount,
-			member_id,
-			saler_id,
+			exempt,
+			receipt_id,
 			remark
 		) VALUES (
 			#{id},
+			#{user.id},
+			#{member.id},
 			#{name},
 			#{quantity},
-			#{price},
 			#{unit},
+			#{price},
 			#{disaccount},
-			#{memberId},
-			#{saler.id},
+			#{exempt},
+			#{receipt.id},
 			#{remark}
 		)
 	</insert>
 	
 	<update id="update">
 		UPDATE cl_sale SET 	
+			seller_id = #{user.id},
+			member_id = #{member.id},
 			name = #{name},
 			quantity = #{quantity},
-			price = #{price},
 			unit = #{unit},
+			price = #{price},
 			disaccount = #{disaccount},
-			member_id = #{memberId},
+			exempt = #{exempt},
+			receipt_id = #{receipt.id},
 			remark = #{remark}
 		WHERE id = #{id}
 	</update>

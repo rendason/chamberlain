@@ -3,26 +3,29 @@
  */
 package com.thinkgem.jeesite.modules.trade.entity;
 
-import org.hibernate.validator.constraints.Length;
-import javax.validation.constraints.NotNull;
-import com.thinkgem.jeesite.modules.sys.entity.User;
-
 import com.thinkgem.jeesite.common.persistence.DataEntity;
+import com.thinkgem.jeesite.modules.assets.entity.Cash;
+import com.thinkgem.jeesite.modules.sys.entity.User;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
 
 /**
- * 购买Entity
- * @author maokeluo
- * @version 2018-03-22
+ * 采购Entity
+ * @author dason
+ * @version 2018-04-09
  */
 public class Purchase extends DataEntity<Purchase> {
 	
 	private static final long serialVersionUID = 1L;
-	private String name;		// 品名
+	private User user;		// 采购员
+	private Integer type;		// 资产类型
+	private String seller;		// 供货商
+	private String name;		// 名称
 	private Integer quantity;		// 数量
-	private Double price;		// 单价
 	private String unit;		// 单位
-	private String saler;		// 卖方
-	private User consumer;		// 买方
+	private Double price;		// 价格
+	private Cash payment;		// 支付方式
 	private String remark;		// 备注
 	
 	public Purchase() {
@@ -33,7 +36,34 @@ public class Purchase extends DataEntity<Purchase> {
 		super(id);
 	}
 
-	@Length(min=1, max=50, message="品名长度必须介于 1 和 50 之间")
+	@NotNull(message="采购员不能为空")
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	@NotNull(message="资产类型不能为空")
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+	
+	@Length(min=1, max=50, message="供货商长度必须介于 1 和 50 之间")
+	public String getSeller() {
+		return seller;
+	}
+
+	public void setSeller(String seller) {
+		this.seller = seller;
+	}
+	
+	@Length(min=1, max=50, message="名称长度必须介于 1 和 50 之间")
 	public String getName() {
 		return name;
 	}
@@ -51,15 +81,6 @@ public class Purchase extends DataEntity<Purchase> {
 		this.quantity = quantity;
 	}
 	
-	@NotNull(message="单价不能为空")
-	public Double getPrice() {
-		return price;
-	}
-
-	public void setPrice(Double price) {
-		this.price = price;
-	}
-	
 	@Length(min=1, max=20, message="单位长度必须介于 1 和 20 之间")
 	public String getUnit() {
 		return unit;
@@ -69,23 +90,24 @@ public class Purchase extends DataEntity<Purchase> {
 		this.unit = unit;
 	}
 	
-	@Length(min=0, max=50, message="卖方长度必须介于 0 和 50 之间")
-	public String getSaler() {
-		return saler;
+	@NotNull(message="价格不能为空")
+	public Double getPrice() {
+		return price;
 	}
 
-	public void setSaler(String saler) {
-		this.saler = saler;
-	}
-	
-	public User getConsumer() {
-		return consumer;
+	public void setPrice(Double price) {
+		this.price = price;
 	}
 
-	public void setConsumer(User consumer) {
-		this.consumer = consumer;
+	@NotNull(message="支付方式不能为空")
+	public Cash getPayment() {
+		return payment;
 	}
-	
+
+	public void setPayment(Cash payment) {
+		this.payment = payment;
+	}
+
 	@Length(min=0, max=50, message="备注长度必须介于 0 和 50 之间")
 	public String getRemark() {
 		return remark;

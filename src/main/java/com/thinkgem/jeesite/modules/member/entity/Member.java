@@ -10,8 +10,8 @@ import com.thinkgem.jeesite.common.persistence.DataEntity;
 
 /**
  * 会员Entity
- * @author maokeluo
- * @version 2018-03-22
+ * @author dason
+ * @version 2018-04-09
  */
 public class Member extends DataEntity<Member> {
 	

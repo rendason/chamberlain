@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>采购管理</title>
+	<title>固定资产管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -27,39 +27,23 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/trade/purchase/">采购列表</a></li>
-		<li class="active"><a href="${ctx}/trade/purchase/form?id=${purchase.id}">采购<shiro:hasPermission name="trade:purchase:edit">${not empty purchase.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="trade:purchase:edit">查看</shiro:lacksPermission></a></li>
+		<li><a href="${ctx}/assets/fixedAssets/">固定资产列表</a></li>
+		<li class="active"><a href="${ctx}/assets/fixedAssets/form?id=${fixedAssets.id}">固定资产<shiro:hasPermission name="assets:fixedAssets:edit">${not empty fixedAssets.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="assets:fixedAssets:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
-	<form:form id="inputForm" modelAttribute="purchase" action="${ctx}/trade/purchase/save" method="post" class="form-horizontal">
+	<form:form id="inputForm" modelAttribute="fixedAssets" action="${ctx}/assets/fixedAssets/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>		
-		<div class="control-group">
-			<label class="control-label">采购员：</label>
-			<div class="controls">
-				<sys:treeselect id="user" name="user.id" value="${purchase.user.id}" labelName="user.name" labelValue="${purchase.user.name}"
-					title="用户" url="/sys/office/treeData?type=3" cssClass="required" allowClear="true" notAllowSelectParent="true"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">资产类型：</label>
-			<div class="controls">
-				<form:radiobuttons path="type" items="${fns:getDictList('purchase_type')}" itemLabel="label" itemValue="value" htmlEscape="false" class="required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">供货商：</label>
-			<div class="controls">
-				<form:input path="seller" htmlEscape="false" maxlength="50" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
 		<div class="control-group">
 			<label class="control-label">名称：</label>
 			<div class="controls">
 				<form:input path="name" htmlEscape="false" maxlength="50" class="input-xlarge required"/>
 				<span class="help-inline"><font color="red">*</font> </span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">分类：</label>
+			<div class="controls">
+				<form:input path="category" htmlEscape="false" maxlength="50" class="input-xlarge "/>
 			</div>
 		</div>
 		<div class="control-group">
@@ -84,23 +68,13 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">支付方式：</label>
-			<div class="controls">
-			    <form:select path="payment.id" class="input-xlarge required">
-                    <form:option value="" label=""/>
-                    <form:options items="${payments}" itemLabel="name" itemValue="id" htmlEscape="false"/>
-                </form:select>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
 			<label class="control-label">备注：</label>
 			<div class="controls">
 				<form:input path="remark" htmlEscape="false" maxlength="50" class="input-xlarge "/>
 			</div>
 		</div>
 		<div class="form-actions">
-			<shiro:hasPermission name="trade:purchase:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
+			<shiro:hasPermission name="assets:fixedAssets:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>

@@ -1,58 +1,34 @@
 /**
  * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
  */
-package com.thinkgem.jeesite.modules.trade.entity;
+package com.thinkgem.jeesite.modules.assets.entity;
 
-import com.thinkgem.jeesite.modules.assets.entity.Cash;
-import com.thinkgem.jeesite.modules.member.entity.Member;
-import com.thinkgem.jeesite.modules.sys.entity.User;
-import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.NotNull;
 
 import com.thinkgem.jeesite.common.persistence.DataEntity;
 
 /**
- * 销售Entity
+ * 固定资产Entity
  * @author dason
  * @version 2018-04-09
  */
-public class Sale extends DataEntity<Sale> {
+public class FixedAssets extends DataEntity<FixedAssets> {
 	
 	private static final long serialVersionUID = 1L;
-	private User user;		// 销售员
-	private Member member;		// 会员
 	private String name;		// 名称
+	private String category;		// 分类
 	private Integer quantity;		// 数量
 	private String unit;		// 单位
 	private Double price;		// 价格
-	private Double disaccount;		// 折扣
-	private Double exempt;		// 减免
-	private Cash receipt;		//收款方式
 	private String remark;		// 备注
 	
-	public Sale() {
+	public FixedAssets() {
 		super();
 	}
 
-	public Sale(String id){
+	public FixedAssets(String id){
 		super(id);
-	}
-
-	@NotNull(message="销售员不能为空")
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Member getMember() {
-		return member;
-	}
-
-	public void setMember(Member member) {
-		this.member = member;
 	}
 
 	@Length(min=1, max=50, message="名称长度必须介于 1 和 50 之间")
@@ -62,6 +38,15 @@ public class Sale extends DataEntity<Sale> {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@Length(min=0, max=50, message="分类长度必须介于 0 和 50 之间")
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 	
 	@NotNull(message="数量不能为空")
@@ -91,30 +76,6 @@ public class Sale extends DataEntity<Sale> {
 		this.price = price;
 	}
 	
-	public Double getDisaccount() {
-		return disaccount;
-	}
-
-	public void setDisaccount(Double disaccount) {
-		this.disaccount = disaccount;
-	}
-	
-	public Double getExempt() {
-		return exempt;
-	}
-
-	public void setExempt(Double exempt) {
-		this.exempt = exempt;
-	}
-
-	public Cash getReceipt() {
-		return receipt;
-	}
-
-	public void setReceipt(Cash receipt) {
-		this.receipt = receipt;
-	}
-
 	@Length(min=0, max=50, message="备注长度必须介于 0 和 50 之间")
 	public String getRemark() {
 		return remark;
