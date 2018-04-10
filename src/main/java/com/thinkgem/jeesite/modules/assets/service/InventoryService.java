@@ -16,7 +16,7 @@ import com.thinkgem.jeesite.modules.assets.dao.InventoryDao;
 /**
  * 库存Service
  * @author dason
- * @version 2018-04-09
+ * @version 2018-04-10
  */
 @Service
 @Transactional(readOnly = true)
@@ -24,10 +24,6 @@ public class InventoryService extends CrudService<InventoryDao, Inventory> {
 
 	public Inventory get(String id) {
 		return super.get(id);
-	}
-
-	public Inventory findOne(Inventory inventory) {
-		return dao.findOne(inventory);
 	}
 	
 	public List<Inventory> findList(Inventory inventory) {

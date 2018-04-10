@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.thinkgem.jeesite.modules.assets.dao.CashDao">
+<mapper namespace="com.thinkgem.jeesite.modules.salary.dao.BaseSalaryDao">
     
-	<sql id="cashColumns">
+	<sql id="baseSalaryColumns">
 		a.id AS "id",
-		a.name AS "name",
-		a.amount AS "amount",
+		a.user_id AS "user.id",
 		a.create_by AS "createBy.id",
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
-		a.del_flag AS "delFlag"
+		a.del_flag AS "delFlag",
+		u2.name AS "user.name",
+		t.total AS "total"
 	</sql>
 	
-	<sql id="cashJoins">
+	<sql id="baseSalaryJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+		LEFT JOIN (SELECT salary_id, SUM(amount) total FROM cl_base_salary_item GROUP BY salary_id) t ON t.salary_id = a.id
 	</sql>
     
-	<select id="get" resultType="Cash">
+	<select id="get" resultType="BaseSalary">
 		SELECT 
-			<include refid="cashColumns"/>
-		FROM cl_cash a
-		<include refid="cashJoins"/>
+			<include refid="baseSalaryColumns"/>
+		FROM cl_base_salary a
+		<include refid="baseSalaryJoins"/>
 		WHERE a.id = #{id}
 	</select>
 	
-	<select id="findList" resultType="Cash">
+	<select id="findList" resultType="BaseSalary">
 		SELECT 
-			<include refid="cashColumns"/>
-		FROM cl_cash a
-		<include refid="cashJoins"/>
+			<include refid="baseSalaryColumns"/>
+		FROM cl_base_salary a
+		<include refid="baseSalaryJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
-			<if test="name != null and name != ''">
-				AND a.name LIKE 
-					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
-					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
-					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
 			</if>
 		</where>
 		<choose>
@@ -49,11 +49,11 @@
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="Cash">
+	<select id="findAllList" resultType="BaseSalary">
 		SELECT 
-			<include refid="cashColumns"/>
-		FROM cl_cash a
-		<include refid="cashJoins"/>
+			<include refid="baseSalaryColumns"/>
+		FROM cl_base_salary a
+		<include refid="baseSalaryJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>		
@@ -68,10 +68,9 @@
 	</select>
 	
 	<insert id="insert">
-		INSERT INTO cl_cash(
+		INSERT INTO cl_base_salary(
 			id,
-			name,
-			amount,
+			user_id,
 			create_by,
 			create_date,
 			update_by,
@@ -80,8 +79,7 @@
 			del_flag
 		) VALUES (
 			#{id},
-			#{name},
-			#{amount},
+			#{user.id},
 			#{createBy.id},
 			#{createDate},
 			#{updateBy.id},
@@ -92,15 +90,14 @@
 	</insert>
 	
 	<update id="update">
-		UPDATE cl_cash SET 	
-			name = #{name},
-			amount = #{amount},
+		UPDATE cl_base_salary SET 	
+			user_id = #{user.id},
 			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>
 	
 	<update id="delete">
-		UPDATE cl_cash SET 
+		UPDATE cl_base_salary SET 
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>

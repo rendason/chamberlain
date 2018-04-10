@@ -49,7 +49,8 @@
 				<th>进价</th>
 				<th>售价</th>
 				<th>上架</th>
-				<th>备注</th>
+				<th>更新时间</th>
+				<th>备注信息</th>
 				<shiro:hasPermission name="assets:inventory:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -78,7 +79,10 @@
 					${fns:getDictLabel(inventory.sales, 'inventory_sales', '')}
 				</td>
 				<td>
-					${inventory.remark}
+					<fmt:formatDate value="${inventory.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+					${inventory.remarks}
 				</td>
 				<shiro:hasPermission name="assets:inventory:edit"><td>
     				<a href="${ctx}/assets/inventory/form?id=${inventory.id}">修改</a>

@@ -11,14 +11,13 @@ import com.thinkgem.jeesite.common.persistence.DataEntity;
 /**
  * 现金Entity
  * @author dason
- * @version 2018-04-09
+ * @version 2018-04-10
  */
 public class Cash extends DataEntity<Cash> {
 	
 	private static final long serialVersionUID = 1L;
 	private String name;		// 名称
 	private Double amount;		// 金额
-	private String remark;		// 备注
 	
 	public Cash() {
 		super();
@@ -44,15 +43,6 @@ public class Cash extends DataEntity<Cash> {
 
 	public void setAmount(Double amount) {
 		this.amount = amount;
-	}
-	
-	@Length(min=0, max=50, message="备注长度必须介于 0 和 50 之间")
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
 	}
 	
 }

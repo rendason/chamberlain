@@ -5,6 +5,9 @@ package com.thinkgem.jeesite.modules.salary.service;
 
 import java.util.List;
 
+import com.thinkgem.jeesite.modules.assets.dao.CashDao;
+import com.thinkgem.jeesite.modules.assets.entity.Cash;
+import com.thinkgem.jeesite.modules.assets.service.CashService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +23,7 @@ import com.thinkgem.jeesite.modules.salary.dao.MonthlySalaryItemDao;
 /**
  * 月度薪资Service
  * @author dason
- * @version 2018-04-09
+ * @version 2018-04-10
  */
 @Service
 @Transactional(readOnly = true)
@@ -28,6 +31,9 @@ public class MonthlySalaryService extends CrudService<MonthlySalaryDao, MonthlyS
 
 	@Autowired
 	private MonthlySalaryItemDao monthlySalaryItemDao;
+
+	@Autowired
+	private CashDao cashDao;
 	
 	public MonthlySalary get(String id) {
 		MonthlySalary monthlySalary = super.get(id);
@@ -69,6 +75,17 @@ public class MonthlySalaryService extends CrudService<MonthlySalaryDao, MonthlyS
 	public void delete(MonthlySalary monthlySalary) {
 		super.delete(monthlySalary);
 		monthlySalaryItemDao.delete(new MonthlySalaryItem(monthlySalary));
+	}
+
+	@Transactional(readOnly = false)
+	public void pay(MonthlySalary monthlySalary) {
+		MonthlySalary result = get(monthlySalary);
+		Cash cash = cashDao.get(result.getPayment());
+		cash.setAmount(cash.getAmount() - result.getActual());
+		cash.preUpdate();
+		cashDao.update(cash);
+		result.setPaid(MonthlySalary.PAID);
+		save(result);
 	}
 	
 }

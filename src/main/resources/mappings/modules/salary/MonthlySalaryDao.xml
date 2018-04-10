@@ -7,12 +7,48 @@
 		a.user_id AS "user.id",
 		a.year AS "year",
 		a.month AS "month",
+		a.payment_id AS "payment.id",
 		a.paid AS "paid",
-		u2.name AS "user.name"
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		u2.name AS "user.name",
+		IFNULL(b.standard, 0) AS "standard",
+		IFNULL(c.planned, 0) AS "planned",
+		IFNULL(d.deducted, 0) AS "deducted",
+		IFNULL(c.planned, 0) -  IFNULL(d.deducted, 0) AS "actual",
+		e.name AS "payment.name"
 	</sql>
 	
 	<sql id="monthlySalaryJoins">
 		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+		LEFT JOIN (
+			SELECT bs.user_id, bi.standard
+			FROM cl_base_salary bs
+			LEFT JOIN (
+				SELECT salary_id, SUM(amount) standard
+				FROM cl_base_salary_item
+				WHERE del_flag = #{DEL_FLAG_NORMAL}
+				GROUP BY salary_id) bi
+			ON bs.id = bi.salary_id
+			WHERE bs.del_flag = #{DEL_FLAG_NORMAL}
+		) b ON b.user_id = a.user_id
+		LEFT JOIN (
+			SELECT salary_id, sum(amount) planned
+			FROM cl_monthly_salary_item
+			WHERE coefficient = 1 AND del_flag = #{DEL_FLAG_NORMAL}
+			GROUP BY salary_id
+		) c ON c.salary_id = a.id
+		LEFT JOIN (
+			SELECT salary_id, sum(amount) deducted
+			FROM cl_monthly_salary_item
+			WHERE coefficient = -1 AND del_flag = #{DEL_FLAG_NORMAL}
+			GROUP BY salary_id
+		) d ON d.salary_id = a.id
+		LEFT JOIN cl_cash e ON e.id = a.payment_id
 	</sql>
     
 	<select id="get" resultType="MonthlySalary">
@@ -29,7 +65,7 @@
 		FROM cl_monthly_salary a
 		<include refid="monthlySalaryJoins"/>
 		<where>
-			
+			a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="user != null and user.id != null and user.id != ''">
 				AND a.user_id = #{user.id}
 			</if>
@@ -48,6 +84,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				ORDER BY a.update_date DESC
 			</otherwise>
 		</choose>
 	</select>
@@ -58,13 +95,14 @@
 		FROM cl_monthly_salary a
 		<include refid="monthlySalaryJoins"/>
 		<where>
-			
+			a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>		
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				ORDER BY a.update_date DESC
 			</otherwise>
 		</choose>
 	</select>
@@ -75,13 +113,27 @@
 			user_id,
 			year,
 			month,
-			paid
+			payment_id,
+			paid,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
 		) VALUES (
 			#{id},
 			#{user.id},
 			#{year},
 			#{month},
-			#{paid}
+			#{payment.id},
+			#{paid},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
 		)
 	</insert>
 	
@@ -90,12 +142,15 @@
 			user_id = #{user.id},
 			year = #{year},
 			month = #{month},
-			paid = #{paid}
+			payment_id = #{payment.id},
+			paid = #{paid},
+			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>
 	
 	<update id="delete">
-		DELETE FROM cl_monthly_salary
+		UPDATE cl_monthly_salary SET 
+			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
 	

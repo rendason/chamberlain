@@ -23,6 +23,37 @@
 				}
 			});
 		});
+		function addRow(list, idx, tpl, row){
+			$(list).append(Mustache.render(tpl, {
+				idx: idx, delBtn: true, row: row
+			}));
+			$(list+idx).find("select").each(function(){
+				$(this).val($(this).attr("data-value"));
+			});
+			$(list+idx).find("input[type='checkbox'], input[type='radio']").each(function(){
+				var ss = $(this).attr("data-value").split(',');
+				for (var i=0; i<ss.length; i++){
+					if($(this).val() == ss[i]){
+						$(this).attr("checked","checked");
+					}
+				}
+			});
+		}
+		function delRow(obj, prefix){
+			var id = $(prefix+"_id");
+			var delFlag = $(prefix+"_delFlag");
+			if (id.val() == ""){
+				$(obj).parent().parent().remove();
+			}else if(delFlag.val() == "0"){
+				delFlag.val("1");
+				$(obj).html("&divide;").attr("title", "撤销删除");
+				$(obj).parent().parent().addClass("error");
+			}else if(delFlag.val() == "1"){
+				delFlag.val("0");
+				$(obj).html("&times;").attr("title", "删除");
+				$(obj).parent().parent().removeClass("error");
+			}
+		}
 	</script>
 </head>
 <body>
@@ -42,7 +73,7 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">资产类型：</label>
+			<label class="control-label">类型：</label>
 			<div class="controls">
 				<form:radiobuttons path="type" items="${fns:getDictList('purchase_type')}" itemLabel="label" itemValue="value" htmlEscape="false" class="required"/>
 				<span class="help-inline"><font color="red">*</font> </span>
@@ -56,37 +87,9 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">名称：</label>
-			<div class="controls">
-				<form:input path="name" htmlEscape="false" maxlength="50" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">数量：</label>
-			<div class="controls">
-				<form:input path="quantity" htmlEscape="false" maxlength="11" class="input-xlarge required digits"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">单位：</label>
-			<div class="controls">
-				<form:input path="unit" htmlEscape="false" maxlength="20" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">价格：</label>
-			<div class="controls">
-				<form:input path="price" htmlEscape="false" class="input-xlarge required number"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
 			<label class="control-label">支付方式：</label>
 			<div class="controls">
-			    <form:select path="payment.id" class="input-xlarge required">
+				<form:select path="payment.id" class="input-xlarge required">
                     <form:option value="" label=""/>
                     <form:options items="${payments}" itemLabel="name" itemValue="id" htmlEscape="false"/>
                 </form:select>
@@ -94,11 +97,70 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">备注：</label>
+			<label class="control-label">备注信息：</label>
 			<div class="controls">
-				<form:input path="remark" htmlEscape="false" maxlength="50" class="input-xlarge "/>
+				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="255" class="input-xxlarge "/>
 			</div>
 		</div>
+			<div class="control-group">
+				<label class="control-label">采购项目：</label>
+				<div class="controls">
+					<table id="contentTable" class="table table-striped table-bordered table-condensed">
+						<thead>
+							<tr>
+								<th class="hide"></th>
+								<th>名称</th>
+								<th>数量</th>
+								<th>单位</th>
+								<th>价格</th>
+								<th>备注信息</th>
+								<shiro:hasPermission name="trade:purchase:edit"><th width="10">&nbsp;</th></shiro:hasPermission>
+							</tr>
+						</thead>
+						<tbody id="purchaseItemList">
+						</tbody>
+						<shiro:hasPermission name="trade:purchase:edit"><tfoot>
+							<tr><td colspan="7"><a href="javascript:" onclick="addRow('#purchaseItemList', purchaseItemRowIdx, purchaseItemTpl);purchaseItemRowIdx = purchaseItemRowIdx + 1;" class="btn">新增</a></td></tr>
+						</tfoot></shiro:hasPermission>
+					</table>
+					<script type="text/template" id="purchaseItemTpl">//<!--
+						<tr id="purchaseItemList{{idx}}">
+							<td class="hide">
+								<input id="purchaseItemList{{idx}}_id" name="purchaseItemList[{{idx}}].id" type="hidden" value="{{row.id}}"/>
+								<input id="purchaseItemList{{idx}}_delFlag" name="purchaseItemList[{{idx}}].delFlag" type="hidden" value="0"/>
+							</td>
+							<td>
+								<input id="purchaseItemList{{idx}}_name" name="purchaseItemList[{{idx}}].name" type="text" value="{{row.name}}" maxlength="50" class="input-small required"/>
+							</td>
+							<td>
+								<input id="purchaseItemList{{idx}}_quantity" name="purchaseItemList[{{idx}}].quantity" type="text" value="{{row.quantity}}" maxlength="11" class="input-small required digits"/>
+							</td>
+							<td>
+								<input id="purchaseItemList{{idx}}_unit" name="purchaseItemList[{{idx}}].unit" type="text" value="{{row.unit}}" maxlength="20" class="input-small required"/>
+							</td>
+							<td>
+								<input id="purchaseItemList{{idx}}_price" name="purchaseItemList[{{idx}}].price" type="text" value="{{row.price}}" class="input-small required number"/>
+							</td>
+							<td>
+								<input id="purchaseItemList{{idx}}_remarks" name="purchaseItemList[{{idx}}].remarks" type="text" value="{{row.remarks}}" maxlength="255" class="input-small "/>
+							</td>
+							<shiro:hasPermission name="trade:purchase:edit"><td class="text-center" width="10">
+								{{#delBtn}}<span class="close" onclick="delRow(this, '#purchaseItemList{{idx}}')" title="删除">&times;</span>{{/delBtn}}
+							</td></shiro:hasPermission>
+						</tr>//-->
+					</script>
+					<script type="text/javascript">
+						var purchaseItemRowIdx = 0, purchaseItemTpl = $("#purchaseItemTpl").html().replace(/(\/\/\<!\-\-)|(\/\/\-\->)/g,"");
+						$(document).ready(function() {
+							var data = ${fns:toJson(purchase.purchaseItemList)};
+							for (var i=0; i<data.length; i++){
+								addRow('#purchaseItemList', purchaseItemRowIdx, purchaseItemTpl, data[i]);
+								purchaseItemRowIdx = purchaseItemRowIdx + 1;
+							}
+						});
+					</script>
+				</div>
+			</div>
 		<div class="form-actions">
 			<shiro:hasPermission name="trade:purchase:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>

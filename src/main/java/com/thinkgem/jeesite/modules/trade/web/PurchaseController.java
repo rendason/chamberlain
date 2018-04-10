@@ -27,7 +27,7 @@ import com.thinkgem.jeesite.modules.trade.service.PurchaseService;
 /**
  * 采购Controller
  * @author dason
- * @version 2018-04-09
+ * @version 2018-04-10
  */
 @Controller
 @RequestMapping(value = "${adminPath}/trade/purchase")

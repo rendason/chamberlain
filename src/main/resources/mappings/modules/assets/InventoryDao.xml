@@ -11,34 +11,39 @@
 		a.cost_price AS "costPrice",
 		a.selling_price AS "sellingPrice",
 		a.sales AS "sales",
-		a.remark AS "remark"
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
 	</sql>
 	
 	<sql id="inventoryJoins">
 	</sql>
-    
-	<select id="get" resultType="Inventory">
-		SELECT 
-			<include refid="inventoryColumns"/>
-		FROM cl_inventory a
-		<include refid="inventoryJoins"/>
-		WHERE a.id = #{id}
-	</select>
 
 	<select id="findOne" resultType="Inventory">
 		SELECT
 		<include refid="inventoryColumns"/>
 		FROM cl_inventory a
 		<include refid="inventoryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+    
+	<select id="get" resultType="Inventory">
+		SELECT 
+			<include refid="inventoryColumns"/>
+		FROM cl_inventory a
+		<include refid="inventoryJoins"/>
 		<where>
-
+			a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="name != null and name != ''">
 				AND a.name = #{name}
 			</if>
 			<if test="unit != null and unit != ''">
 				AND a.unit = #{unit}
 			</if>
-			<if test="costPrice != null">
+			<if test="cost_price != null and cost_price != ''">
 				AND a.cost_price = #{costPrice}
 			</if>
 		</where>
@@ -50,9 +55,9 @@
 		FROM cl_inventory a
 		<include refid="inventoryJoins"/>
 		<where>
-			
+			a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="name != null and name != ''">
-				AND a.name LIKE 
+				AND a.name LIKE
 					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
 					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
 					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
@@ -69,6 +74,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				ORDER BY a.update_date DESC
 			</otherwise>
 		</choose>
 	</select>
@@ -79,13 +85,14 @@
 		FROM cl_inventory a
 		<include refid="inventoryJoins"/>
 		<where>
-			
+			a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>		
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				ORDER BY a.update_date DESC
 			</otherwise>
 		</choose>
 	</select>
@@ -100,7 +107,12 @@
 			cost_price,
 			selling_price,
 			sales,
-			remark
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
 		) VALUES (
 			#{id},
 			#{name},
@@ -110,7 +122,12 @@
 			#{costPrice},
 			#{sellingPrice},
 			#{sales},
-			#{remark}
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
 		)
 	</insert>
 	
@@ -123,12 +140,13 @@
 			cost_price = #{costPrice},
 			selling_price = #{sellingPrice},
 			sales = #{sales},
-			remark = #{remark}
+			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>
 	
 	<update id="delete">
-		DELETE FROM cl_inventory
+		UPDATE cl_inventory SET 
+			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
 	

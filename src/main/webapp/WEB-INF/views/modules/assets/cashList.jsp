@@ -38,7 +38,8 @@
 			<tr>
 				<th>名称</th>
 				<th>金额</th>
-				<th>备注</th>
+				<th>更新时间</th>
+				<th>备注信息</th>
 				<shiro:hasPermission name="assets:cash:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -52,7 +53,10 @@
 					${cash.amount}
 				</td>
 				<td>
-					${cash.remark}
+					<fmt:formatDate value="${cash.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+					${cash.remarks}
 				</td>
 				<shiro:hasPermission name="assets:cash:edit"><td>
     				<a href="${ctx}/assets/cash/form?id=${cash.id}">修改</a>

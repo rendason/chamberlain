@@ -8,27 +8,25 @@ import com.thinkgem.jeesite.modules.member.entity.Member;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
+import java.util.List;
+import com.google.common.collect.Lists;
 
 import com.thinkgem.jeesite.common.persistence.DataEntity;
 
 /**
  * 销售Entity
  * @author dason
- * @version 2018-04-09
+ * @version 2018-04-10
  */
 public class Sale extends DataEntity<Sale> {
 	
 	private static final long serialVersionUID = 1L;
 	private User user;		// 销售员
 	private Member member;		// 会员
-	private String name;		// 名称
-	private Integer quantity;		// 数量
-	private String unit;		// 单位
-	private Double price;		// 价格
-	private Double disaccount;		// 折扣
+	private Cash receipt;		// 收款方式
+	private Integer discount;		// 折扣(%)
 	private Double exempt;		// 减免
-	private Cash receipt;		//收款方式
-	private String remark;		// 备注
+	private List<SaleItem> saleItemList = Lists.newArrayList();		// 子表列表
 	
 	public Sale() {
 		super();
@@ -55,58 +53,7 @@ public class Sale extends DataEntity<Sale> {
 		this.member = member;
 	}
 
-	@Length(min=1, max=50, message="名称长度必须介于 1 和 50 之间")
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	@NotNull(message="数量不能为空")
-	public Integer getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
-	}
-	
-	@Length(min=1, max=20, message="单位长度必须介于 1 和 20 之间")
-	public String getUnit() {
-		return unit;
-	}
-
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
-	
-	@NotNull(message="价格不能为空")
-	public Double getPrice() {
-		return price;
-	}
-
-	public void setPrice(Double price) {
-		this.price = price;
-	}
-	
-	public Double getDisaccount() {
-		return disaccount;
-	}
-
-	public void setDisaccount(Double disaccount) {
-		this.disaccount = disaccount;
-	}
-	
-	public Double getExempt() {
-		return exempt;
-	}
-
-	public void setExempt(Double exempt) {
-		this.exempt = exempt;
-	}
-
+	@NotNull(message="付款方式不能为空")
 	public Cash getReceipt() {
 		return receipt;
 	}
@@ -115,13 +62,27 @@ public class Sale extends DataEntity<Sale> {
 		this.receipt = receipt;
 	}
 
-	@Length(min=0, max=50, message="备注长度必须介于 0 和 50 之间")
-	public String getRemark() {
-		return remark;
+	public Integer getDiscount() {
+		return discount;
 	}
 
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setDiscount(Integer discount) {
+		this.discount = discount;
+	}
+
+	public Double getExempt() {
+		return exempt;
+	}
+
+	public void setExempt(Double exempt) {
+		this.exempt = exempt;
 	}
 	
+	public List<SaleItem> getSaleItemList() {
+		return saleItemList;
+	}
+
+	public void setSaleItemList(List<SaleItem> saleItemList) {
+		this.saleItemList = saleItemList;
+	}
 }

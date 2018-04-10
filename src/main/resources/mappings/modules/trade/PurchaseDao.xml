@@ -7,12 +7,13 @@
 		a.consumer_id AS "user.id",
 		a.type AS "type",
 		a.seller AS "seller",
-		a.name AS "name",
-		a.quantity AS "quantity",
-		a.unit AS "unit",
-		a.price AS "price",
 		a.payment_id AS "payment.id",
-		a.remark AS "remark",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
 		u2.name AS "user.name",
 		c.name AS "payment.name"
 	</sql>
@@ -36,7 +37,7 @@
 		FROM cl_purchase a
 		<include refid="purchaseJoins"/>
 		<where>
-			
+			a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="user != null and user.id != null and user.id != ''">
 				AND a.consumer_id = #{user.id}
 			</if>
@@ -44,13 +45,10 @@
 				AND a.type = #{type}
 			</if>
 			<if test="seller != null and seller != ''">
-				AND a.seller = #{seller}
-			</if>
-			<if test="name != null and name != ''">
-				AND a.name LIKE 
-					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
-					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
-					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+				AND a.seller LIKE 
+					<if test="dbName == 'oracle'">'%'||#{seller}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{seller}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{seller},'%')</if>
 			</if>
 		</where>
 		<choose>
@@ -58,6 +56,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				ORDER BY a.update_date DESC
 			</otherwise>
 		</choose>
 	</select>
@@ -68,13 +67,14 @@
 		FROM cl_purchase a
 		<include refid="purchaseJoins"/>
 		<where>
-			
+			a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>		
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				ORDER BY a.update_date DESC
 			</otherwise>
 		</choose>
 	</select>
@@ -85,23 +85,25 @@
 			consumer_id,
 			type,
 			seller,
-			name,
-			quantity,
-			unit,
-			price,
 			payment_id,
-			remark
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
 		) VALUES (
 			#{id},
 			#{user.id},
 			#{type},
 			#{seller},
-			#{name},
-			#{quantity},
-			#{unit},
-			#{price},
 			#{payment.id},
-			#{remark}
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
 		)
 	</insert>
 	
@@ -110,17 +112,14 @@
 			consumer_id = #{user.id},
 			type = #{type},
 			seller = #{seller},
-			name = #{name},
-			quantity = #{quantity},
-			unit = #{unit},
-			price = #{price},
 			payment_id = #{payment.id},
-			remark = #{remark}
+			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>
 	
 	<update id="delete">
-		DELETE FROM cl_purchase
+		UPDATE cl_purchase SET 
+			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
 	

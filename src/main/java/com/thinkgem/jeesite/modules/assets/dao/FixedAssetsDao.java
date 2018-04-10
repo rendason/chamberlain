@@ -10,11 +10,10 @@ import com.thinkgem.jeesite.modules.assets.entity.FixedAssets;
 /**
  * 固定资产DAO接口
  * @author dason
- * @version 2018-04-09
+ * @version 2018-04-10
  */
 @MyBatisDao
 public interface FixedAssetsDao extends CrudDao<FixedAssets> {
 
     FixedAssets findOne(FixedAssets fixedAssets);
-	
 }

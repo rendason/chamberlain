@@ -30,13 +30,10 @@
 					title="用户" url="/sys/office/treeData?type=3" cssClass="input-small" allowClear="true" notAllowSelectParent="true"/>
 			</li>
 			<li><label>会员：</label>
-				<form:select path="member.id" class="input-medium">
+				<form:select path="member.id" class="input-medium required">
                     <form:option value="" label=""/>
                     <form:options items="${members}" itemLabel="name" itemValue="id" htmlEscape="false"/>
                 </form:select>
-			</li>
-			<li><label>名称：</label>
-				<form:input path="name" htmlEscape="false" maxlength="50" class="input-medium"/>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
@@ -48,13 +45,11 @@
 			<tr>
 				<th>销售员</th>
 				<th>会员</th>
-				<th>名称</th>
-				<th>数量</th>
-				<th>单位</th>
-				<th>价格</th>
-				<th>折扣</th>
+				<th>收款方式</th>
+				<th>折扣(%)</th>
 				<th>减免</th>
-				<th>备注</th>
+				<th>更新时间</th>
+				<th>备注信息</th>
 				<shiro:hasPermission name="trade:sale:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -68,25 +63,19 @@
 					${sale.member.name}
 				</td>
 				<td>
-					${sale.name}
+					${sale.receipt.name}
 				</td>
 				<td>
-					${sale.quantity}
-				</td>
-				<td>
-					${sale.unit}
-				</td>
-				<td>
-					${sale.price}
-				</td>
-				<td>
-					${sale.disaccount}
+					${sale.discount}
 				</td>
 				<td>
 					${sale.exempt}
 				</td>
 				<td>
-					${sale.remark}
+					<fmt:formatDate value="${sale.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+					${sale.remarks}
 				</td>
 				<shiro:hasPermission name="trade:sale:edit"><td>
     				<a href="${ctx}/trade/sale/form?id=${sale.id}">修改</a>

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.thinkgem.jeesite.modules.salary.dao.MonthlySalaryItemDao">
+<mapper namespace="com.thinkgem.jeesite.modules.trade.dao.SaleItemDao">
     
-	<sql id="monthlySalaryItemColumns">
+	<sql id="saleItemColumns">
 		a.id AS "id",
-		a.salary_id AS "salary.id",
+		a.sale_id AS "sale.id",
 		a.name AS "name",
-		a.amount AS "amount",
-		a.coefficient AS "coefficient",
+		a.quantity AS "quantity",
+		a.unit AS "unit",
+		a.price AS "price",
 		a.create_by AS "createBy.id",
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
@@ -16,27 +17,27 @@
 		a.del_flag AS "delFlag"
 	</sql>
 	
-	<sql id="monthlySalaryItemJoins">
-		LEFT JOIN cl_monthly_salary b ON b.id = a.salary_id
+	<sql id="saleItemJoins">
+		LEFT JOIN cl_sale b ON b.id = a.sale_id
 	</sql>
     
-	<select id="get" resultType="MonthlySalaryItem">
+	<select id="get" resultType="SaleItem">
 		SELECT 
-			<include refid="monthlySalaryItemColumns"/>
-		FROM cl_monthly_salary_item a
-		<include refid="monthlySalaryItemJoins"/>
+			<include refid="saleItemColumns"/>
+		FROM cl_sale_item a
+		<include refid="saleItemJoins"/>
 		WHERE a.id = #{id}
 	</select>
 	
-	<select id="findList" resultType="MonthlySalaryItem">
+	<select id="findList" resultType="SaleItem">
 		SELECT 
-			<include refid="monthlySalaryItemColumns"/>
-		FROM cl_monthly_salary_item a
-		<include refid="monthlySalaryItemJoins"/>
+			<include refid="saleItemColumns"/>
+		FROM cl_sale_item a
+		<include refid="saleItemJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
-			<if test="salary != null and salary.id != null and salary.id != ''">
-				AND a.salary_id = #{salary.id}
+			<if test="sale != null and sale.id != null and sale.id != ''">
+				AND a.sale_id = #{sale.id}
 			</if>
 			<if test="name != null and name != ''">
 				AND a.name LIKE 
@@ -55,11 +56,11 @@
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="MonthlySalaryItem">
+	<select id="findAllList" resultType="SaleItem">
 		SELECT 
-			<include refid="monthlySalaryItemColumns"/>
-		FROM cl_monthly_salary_item a
-		<include refid="monthlySalaryItemJoins"/>
+			<include refid="saleItemColumns"/>
+		FROM cl_sale_item a
+		<include refid="saleItemJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>		
@@ -74,12 +75,13 @@
 	</select>
 	
 	<insert id="insert">
-		INSERT INTO cl_monthly_salary_item(
+		INSERT INTO cl_sale_item(
 			id,
-			salary_id,
+			sale_id,
 			name,
-			amount,
-			coefficient,
+			quantity,
+			unit,
+			price,
 			create_by,
 			create_date,
 			update_by,
@@ -88,10 +90,11 @@
 			del_flag
 		) VALUES (
 			#{id},
-			#{salary.id},
+			#{sale.id},
 			#{name},
-			#{amount},
-			#{coefficient},
+			#{quantity},
+			#{unit},
+			#{price},
 			#{createBy.id},
 			#{createDate},
 			#{updateBy.id},
@@ -102,24 +105,25 @@
 	</insert>
 	
 	<update id="update">
-		UPDATE cl_monthly_salary_item SET 	
-			salary_id = #{salary.id},
+		UPDATE cl_sale_item SET 	
+			sale_id = #{sale.id},
 			name = #{name},
-			amount = #{amount},
-			coefficient = #{coefficient},
+			quantity = #{quantity},
+			unit = #{unit},
+			price = #{price},
 			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>
 	
 	<update id="delete">
-		UPDATE cl_monthly_salary_item SET 
+		UPDATE cl_sale_item SET 
 			del_flag = #{DEL_FLAG_DELETE}
 		<choose>
 			<when test="id !=null and id != ''">
 				WHERE id = #{id}
 			</when>
 			<otherwise>
-				WHERE salary_id = #{salary.id}
+				WHERE sale_id = #{sale.id}
 			</otherwise>
 		</choose>
 	</update>

@@ -29,14 +29,11 @@
 				<sys:treeselect id="user" name="user.id" value="${purchase.user.id}" labelName="user.name" labelValue="${purchase.user.name}"
 					title="用户" url="/sys/office/treeData?type=3" cssClass="input-small" allowClear="true" notAllowSelectParent="true"/>
 			</li>
-			<li><label>资产类型：</label>
+			<li><label>类型：</label>
 				<form:radiobuttons path="type" items="${fns:getDictList('purchase_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 			</li>
 			<li><label>供货商：</label>
 				<form:input path="seller" htmlEscape="false" maxlength="50" class="input-medium"/>
-			</li>
-			<li><label>名称：</label>
-				<form:input path="name" htmlEscape="false" maxlength="50" class="input-medium"/>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
@@ -47,14 +44,11 @@
 		<thead>
 			<tr>
 				<th>采购员</th>
-				<th>资产类型</th>
+				<th>类型</th>
 				<th>供货商</th>
-				<th>名称</th>
-				<th>数量</th>
-				<th>单位</th>
-				<th>价格</th>
 				<th>支付方式</th>
-				<th>备注</th>
+				<th>更新时间</th>
+				<th>备注信息</th>
 				<shiro:hasPermission name="trade:purchase:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -71,22 +65,13 @@
 					${purchase.seller}
 				</td>
 				<td>
-					${purchase.name}
-				</td>
-				<td>
-					${purchase.quantity}
-				</td>
-				<td>
-					${purchase.unit}
-				</td>
-				<td>
-					${purchase.price}
-				</td>
-				<td>
 					${purchase.payment.name}
 				</td>
 				<td>
-					${purchase.remark}
+					<fmt:formatDate value="${purchase.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+					${purchase.remarks}
 				</td>
 				<shiro:hasPermission name="trade:purchase:edit"><td>
     				<a href="${ctx}/trade/purchase/form?id=${purchase.id}">修改</a>

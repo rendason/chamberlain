@@ -44,7 +44,8 @@
 				<th>数量</th>
 				<th>单位</th>
 				<th>价格</th>
-				<th>备注</th>
+				<th>更新时间</th>
+				<th>备注信息</th>
 				<shiro:hasPermission name="assets:fixedAssets:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -67,7 +68,10 @@
 					${fixedAssets.price}
 				</td>
 				<td>
-					${fixedAssets.remark}
+					<fmt:formatDate value="${fixedAssets.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+					${fixedAssets.remarks}
 				</td>
 				<shiro:hasPermission name="assets:fixedAssets:edit"><td>
     				<a href="${ctx}/assets/fixedAssets/form?id=${fixedAssets.id}">修改</a>

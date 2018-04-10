@@ -4,14 +4,19 @@
     
 	<sql id="baseSalaryItemColumns">
 		a.id AS "id",
-		a.user_id AS "user.id",
+		a.salary_id AS "salary.id",
 		a.name AS "name",
 		a.amount AS "amount",
-		u2.name AS "user.name"
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
 	</sql>
 	
 	<sql id="baseSalaryItemJoins">
-		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+		LEFT JOIN cl_base_salary b ON b.id = a.salary_id
 	</sql>
     
 	<select id="get" resultType="BaseSalaryItem">
@@ -28,9 +33,9 @@
 		FROM cl_base_salary_item a
 		<include refid="baseSalaryItemJoins"/>
 		<where>
-			
-			<if test="user != null and user.id != null and user.id != ''">
-				AND a.user_id = #{user.id}
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="salary != null and salary.id != null and salary.id != ''">
+				AND a.salary_id = #{salary.id}
 			</if>
 			<if test="name != null and name != ''">
 				AND a.name LIKE 
@@ -44,6 +49,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				ORDER BY a.create_date ASC
 			</otherwise>
 		</choose>
 	</select>
@@ -54,13 +60,14 @@
 		FROM cl_base_salary_item a
 		<include refid="baseSalaryItemJoins"/>
 		<where>
-			
+			a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>		
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				ORDER BY a.create_date ASC
 			</otherwise>
 		</choose>
 	</select>
@@ -68,28 +75,48 @@
 	<insert id="insert">
 		INSERT INTO cl_base_salary_item(
 			id,
-			user_id,
+			salary_id,
 			name,
-			amount
+			amount,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
 		) VALUES (
 			#{id},
-			#{user.id},
+			#{salary.id},
 			#{name},
-			#{amount}
+			#{amount},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
 		)
 	</insert>
 	
 	<update id="update">
 		UPDATE cl_base_salary_item SET 	
-			user_id = #{user.id},
 			name = #{name},
-			amount = #{amount}
+			amount = #{amount},
+			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>
 	
 	<update id="delete">
-		DELETE FROM cl_base_salary_item
-		WHERE id = #{id}
+		UPDATE cl_base_salary_item SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE salary_id = #{salary.id}
+			</otherwise>
+		</choose>
 	</update>
 	
 </mapper>

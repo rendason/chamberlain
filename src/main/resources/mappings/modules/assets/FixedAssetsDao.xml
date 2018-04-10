@@ -9,34 +9,39 @@
 		a.quantity AS "quantity",
 		a.unit AS "unit",
 		a.price AS "price",
-		a.remark AS "remark"
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
 	</sql>
 	
 	<sql id="fixedAssetsJoins">
 	</sql>
-    
-	<select id="get" resultType="FixedAssets">
-		SELECT 
-			<include refid="fixedAssetsColumns"/>
-		FROM cl_fixed_assets a
-		<include refid="fixedAssetsJoins"/>
-		WHERE a.id = #{id}
-	</select>
 
 	<select id="findOne" resultType="FixedAssets">
 		SELECT
 		<include refid="fixedAssetsColumns"/>
 		FROM cl_fixed_assets a
 		<include refid="fixedAssetsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+    
+	<select id="get" resultType="FixedAssets">
+		SELECT 
+			<include refid="fixedAssetsColumns"/>
+		FROM cl_fixed_assets a
+		<include refid="fixedAssetsJoins"/>
 		<where>
-
+			a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="name != null and name != ''">
 				AND a.name = #{name}
 			</if>
 			<if test="unit != null and unit != ''">
 				AND a.unit = #{unit}
 			</if>
-			<if test="price != null">
+			<if test="price != null and price != ''">
 				AND a.price = #{price}
 			</if>
 		</where>
@@ -48,7 +53,7 @@
 		FROM cl_fixed_assets a
 		<include refid="fixedAssetsJoins"/>
 		<where>
-			
+			a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="name != null and name != ''">
 				AND a.name LIKE 
 					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
@@ -67,6 +72,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				ORDER BY a.update_date DESC
 			</otherwise>
 		</choose>
 	</select>
@@ -77,13 +83,14 @@
 		FROM cl_fixed_assets a
 		<include refid="fixedAssetsJoins"/>
 		<where>
-			
+			a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>		
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				ORDER BY a.update_date DESC
 			</otherwise>
 		</choose>
 	</select>
@@ -96,7 +103,12 @@
 			quantity,
 			unit,
 			price,
-			remark
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
 		) VALUES (
 			#{id},
 			#{name},
@@ -104,7 +116,12 @@
 			#{quantity},
 			#{unit},
 			#{price},
-			#{remark}
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
 		)
 	</insert>
 	
@@ -115,12 +132,13 @@
 			quantity = #{quantity},
 			unit = #{unit},
 			price = #{price},
-			remark = #{remark}
+			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>
 	
 	<update id="delete">
-		DELETE FROM cl_fixed_assets
+		UPDATE cl_fixed_assets SET 
+			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
 	

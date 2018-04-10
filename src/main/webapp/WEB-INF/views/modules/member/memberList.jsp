@@ -43,6 +43,8 @@
 				<th>手机</th>
 				<th>等级</th>
 				<th>余额</th>
+				<th>更新时间</th>
+				<th>备注信息</th>
 				<shiro:hasPermission name="member:member:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -60,6 +62,12 @@
 				</td>
 				<td>
 					${member.balance}
+				</td>
+				<td>
+					<fmt:formatDate value="${member.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+					${member.remarks}
 				</td>
 				<shiro:hasPermission name="member:member:edit"><td>
     				<a href="${ctx}/member/member/form?id=${member.id}">修改</a>

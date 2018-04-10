@@ -11,7 +11,7 @@ import com.thinkgem.jeesite.common.persistence.DataEntity;
 /**
  * 月度薪资Entity
  * @author dason
- * @version 2018-04-09
+ * @version 2018-04-10
  */
 public class MonthlySalaryItem extends DataEntity<MonthlySalaryItem> {
 	

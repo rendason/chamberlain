@@ -11,7 +11,7 @@ import com.thinkgem.jeesite.common.persistence.DataEntity;
 /**
  * 库存Entity
  * @author dason
- * @version 2018-04-09
+ * @version 2018-04-10
  */
 public class Inventory extends DataEntity<Inventory> {
 	
@@ -23,7 +23,6 @@ public class Inventory extends DataEntity<Inventory> {
 	private Double costPrice;		// 进价
 	private Double sellingPrice;		// 售价
 	private Integer sales;		// 上架
-	private String remark;		// 备注
 	
 	public Inventory() {
 		super();
@@ -95,14 +94,8 @@ public class Inventory extends DataEntity<Inventory> {
 	public void setSales(Integer sales) {
 		this.sales = sales;
 	}
-	
-	@Length(min=0, max=50, message="备注长度必须介于 0 和 50 之间")
-	public String getRemark() {
-		return remark;
-	}
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-	
+	public static final int IN_SELL = 1;
+	public static final int NOT_SELL = 0;
+
 }

@@ -31,7 +31,7 @@ import com.thinkgem.jeesite.modules.trade.service.SaleService;
 /**
  * 销售Controller
  * @author dason
- * @version 2018-04-09
+ * @version 2018-04-10
  */
 @Controller
 @RequestMapping(value = "${adminPath}/trade/sale")
@@ -75,8 +75,8 @@ public class SaleController extends BaseController {
 	public String form(Sale sale, Model model) {
 		model.addAttribute("sale", sale);
 		model.addAttribute("members", memberService.findList(new Member()));
-		model.addAttribute("inventories", inventoryService.findList(new Inventory()));
 		model.addAttribute("receipts", cashService.findList(new Cash()));
+		model.addAttribute("inventories", inventoryService.findList(new Inventory()));
 		return "modules/trade/saleForm";
 	}
 

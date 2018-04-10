@@ -18,19 +18,16 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/salary/baseSalaryItem/">标准薪资列表</a></li>
-		<shiro:hasPermission name="salary:baseSalaryItem:edit"><li><a href="${ctx}/salary/baseSalaryItem/form">标准薪资添加</a></li></shiro:hasPermission>
+		<li class="active"><a href="${ctx}/salary/baseSalary/">标准薪资列表</a></li>
+		<shiro:hasPermission name="salary:baseSalary:edit"><li><a href="${ctx}/salary/baseSalary/form">标准薪资添加</a></li></shiro:hasPermission>
 	</ul>
-	<form:form id="searchForm" modelAttribute="baseSalaryItem" action="${ctx}/salary/baseSalaryItem/" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="baseSalary" action="${ctx}/salary/baseSalary/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
 			<li><label>用户：</label>
-				<sys:treeselect id="user" name="user.id" value="${baseSalaryItem.user.id}" labelName="user.name" labelValue="${baseSalaryItem.user.name}"
+				<sys:treeselect id="user" name="user.id" value="${baseSalary.user.id}" labelName="user.name" labelValue="${baseSalary.user.name}"
 					title="用户" url="/sys/office/treeData?type=3" cssClass="input-small" allowClear="true" notAllowSelectParent="true"/>
-			</li>
-			<li><label>名称：</label>
-				<form:input path="name" htmlEscape="false" maxlength="50" class="input-medium"/>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
@@ -41,26 +38,30 @@
 		<thead>
 			<tr>
 				<th>用户</th>
-				<th>名称</th>
-				<th>金额</th>
-				<shiro:hasPermission name="salary:baseSalaryItem:edit"><th>操作</th></shiro:hasPermission>
+				<th>薪资</th>
+				<th>更新时间</th>
+				<th>备注信息</th>
+				<shiro:hasPermission name="salary:baseSalary:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
 		<tbody>
-		<c:forEach items="${page.list}" var="baseSalaryItem">
+		<c:forEach items="${page.list}" var="baseSalary">
 			<tr>
-				<td><a href="${ctx}/salary/baseSalaryItem/form?id=${baseSalaryItem.id}">
-					${baseSalaryItem.user.name}
+				<td><a href="${ctx}/salary/baseSalary/form?id=${baseSalary.id}">
+					${baseSalary.user.name}
 				</a></td>
 				<td>
-					${baseSalaryItem.name}
+                    ${baseSalary.total}
+                </td>
+				<td>
+					<fmt:formatDate value="${baseSalary.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
-					${baseSalaryItem.amount}
+					${baseSalary.remarks}
 				</td>
-				<shiro:hasPermission name="salary:baseSalaryItem:edit"><td>
-    				<a href="${ctx}/salary/baseSalaryItem/form?id=${baseSalaryItem.id}">修改</a>
-					<a href="${ctx}/salary/baseSalaryItem/delete?id=${baseSalaryItem.id}" onclick="return confirmx('确认要删除该标准薪资吗？', this.href)">删除</a>
+				<shiro:hasPermission name="salary:baseSalary:edit"><td>
+    				<a href="${ctx}/salary/baseSalary/form?id=${baseSalary.id}">修改</a>
+					<a href="${ctx}/salary/baseSalary/delete?id=${baseSalary.id}" onclick="return confirmx('确认要删除该标准薪资吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

@@ -3,6 +3,7 @@
  */
 package com.thinkgem.jeesite.modules.salary.entity;
 
+import com.thinkgem.jeesite.modules.assets.entity.Cash;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
@@ -14,7 +15,7 @@ import com.thinkgem.jeesite.common.persistence.DataEntity;
 /**
  * 月度薪资Entity
  * @author dason
- * @version 2018-04-09
+ * @version 2018-04-10
  */
 public class MonthlySalary extends DataEntity<MonthlySalary> {
 	
@@ -22,7 +23,12 @@ public class MonthlySalary extends DataEntity<MonthlySalary> {
 	private User user;		// 用户
 	private Integer year;		// 年
 	private Integer month;		// 月
-	private String paid;		// 支付
+	private Double standard;	//标准
+	private Double planned;		//应发
+	private Double deducted;	//扣减
+	private Double actual;		//实发
+	private Cash payment;		// 支付方式
+	private Integer paid;		// 支付
 	private List<MonthlySalaryItem> monthlySalaryItemList = Lists.newArrayList();		// 子表列表
 	
 	public MonthlySalary() {
@@ -59,13 +65,54 @@ public class MonthlySalary extends DataEntity<MonthlySalary> {
 	public void setMonth(Integer month) {
 		this.month = month;
 	}
-	
-	@Length(min=1, max=1, message="支付长度必须介于 1 和 1 之间")
-	public String getPaid() {
+
+	public Double getStandard() {
+		return standard;
+	}
+
+	public void setStandard(Double standard) {
+		this.standard = standard;
+	}
+
+	public Double getPlanned() {
+		return planned;
+	}
+
+	public void setPlanned(Double planned) {
+		this.planned = planned;
+	}
+
+	public Double getDeducted() {
+		return deducted;
+	}
+
+	public void setDeducted(Double deducted) {
+		this.deducted = deducted;
+	}
+
+	public Double getActual() {
+		return actual;
+	}
+
+	public void setActual(Double actual) {
+		this.actual = actual;
+	}
+
+	@NotNull(message="支付方式不能为空")
+	public Cash getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Cash payment) {
+		this.payment = payment;
+	}
+
+	@NotNull(message="支付不能为空")
+	public Integer getPaid() {
 		return paid;
 	}
 
-	public void setPaid(String paid) {
+	public void setPaid(Integer paid) {
 		this.paid = paid;
 	}
 	
@@ -76,4 +123,7 @@ public class MonthlySalary extends DataEntity<MonthlySalary> {
 	public void setMonthlySalaryItemList(List<MonthlySalaryItem> monthlySalaryItemList) {
 		this.monthlySalaryItemList = monthlySalaryItemList;
 	}
+
+	public static final int PAID = 1;
+	public static final int UNPAID = 2;
 }

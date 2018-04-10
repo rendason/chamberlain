@@ -16,7 +16,7 @@ import com.thinkgem.jeesite.modules.assets.dao.CashDao;
 /**
  * 现金Service
  * @author dason
- * @version 2018-04-09
+ * @version 2018-04-10
  */
 @Service
 @Transactional(readOnly = true)

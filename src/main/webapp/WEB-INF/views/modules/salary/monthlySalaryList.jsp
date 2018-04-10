@@ -49,7 +49,14 @@
 				<th>用户</th>
 				<th>年</th>
 				<th>月</th>
+				<th>标准</th>
+				<th>应发</th>
+				<th>扣减</th>
+				<th>实发</th>
+				<th>支付方式</th>
 				<th>支付</th>
+				<th>更新时间</th>
+				<th>备注信息</th>
 				<shiro:hasPermission name="salary:monthlySalary:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -66,10 +73,31 @@
 					${monthlySalary.month}
 				</td>
 				<td>
+					${monthlySalary.standard}
+				</td>
+				<td>
+					${monthlySalary.planned}
+				</td>
+				<td>
+					${monthlySalary.deducted}
+				</td>
+				<td>
+					${monthlySalary.actual}
+				</td>
+				<td>
+					${monthlySalary.payment.name}
+				</td>
+				<td>
 					${fns:getDictLabel(monthlySalary.paid, 'monthly_salary_paid', '')}
 				</td>
+				<td>
+					<fmt:formatDate value="${monthlySalary.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+					${monthlySalary.remarks}
+				</td>
 				<shiro:hasPermission name="salary:monthlySalary:edit"><td>
-    				<a href="${ctx}/salary/monthlySalary/form?id=${monthlySalary.id}">修改</a>
+					<c:if test="${monthlySalary.paid!=1}"><a href="${ctx}/salary/monthlySalary/pay?id=${monthlySalary.id}" onclick="return confirmx('确认要支付该月度薪资吗？', this.href)">支付</a></c:if>
 					<a href="${ctx}/salary/monthlySalary/delete?id=${monthlySalary.id}" onclick="return confirmx('确认要删除该月度薪资吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>
 			</tr>

@@ -6,6 +6,13 @@ package com.thinkgem.jeesite.modules.salary.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.thinkgem.jeesite.modules.assets.entity.Cash;
+import com.thinkgem.jeesite.modules.assets.service.CashService;
+import com.thinkgem.jeesite.modules.salary.entity.BaseSalary;
+import com.thinkgem.jeesite.modules.salary.entity.BaseSalaryItem;
+import com.thinkgem.jeesite.modules.salary.entity.MonthlySalaryItem;
+import com.thinkgem.jeesite.modules.salary.service.BaseSalaryService;
+import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,10 +29,13 @@ import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.salary.entity.MonthlySalary;
 import com.thinkgem.jeesite.modules.salary.service.MonthlySalaryService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 月度薪资Controller
  * @author dason
- * @version 2018-04-09
+ * @version 2018-04-10
  */
 @Controller
 @RequestMapping(value = "${adminPath}/salary/monthlySalary")
@@ -33,6 +43,12 @@ public class MonthlySalaryController extends BaseController {
 
 	@Autowired
 	private MonthlySalaryService monthlySalaryService;
+
+	@Autowired
+	private BaseSalaryService baseSalaryService;
+
+	@Autowired
+	private CashService cashService;
 	
 	@ModelAttribute
 	public MonthlySalary get(@RequestParam(required=false) String id) {
@@ -58,7 +74,16 @@ public class MonthlySalaryController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(MonthlySalary monthlySalary, Model model) {
 		model.addAttribute("monthlySalary", monthlySalary);
+		model.addAttribute("payments", cashService.findList(new Cash()));
 		return "modules/salary/monthlySalaryForm";
+	}
+
+	@RequiresPermissions("salary:monthlySalary:edit")
+	@RequestMapping(value = "pay")
+	public String pay(MonthlySalary monthlySalary, RedirectAttributes redirectAttributes) {
+		monthlySalaryService.pay(monthlySalary);
+		addMessage(redirectAttributes, "支付月度薪资成功");
+		return "redirect:"+Global.getAdminPath()+"/salary/monthlySalary/?repage";
 	}
 
 	@RequiresPermissions("salary:monthlySalary:edit")

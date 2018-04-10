@@ -23,6 +23,37 @@
 				}
 			});
 		});
+		function addRow(list, idx, tpl, row){
+			$(list).append(Mustache.render(tpl, {
+				idx: idx, delBtn: true, row: row
+			}));
+			$(list+idx).find("select").each(function(){
+				$(this).val($(this).attr("data-value"));
+			});
+			$(list+idx).find("input[type='checkbox'], input[type='radio']").each(function(){
+				var ss = $(this).attr("data-value").split(',');
+				for (var i=0; i<ss.length; i++){
+					if($(this).val() == ss[i]){
+						$(this).attr("checked","checked");
+					}
+				}
+			});
+		}
+		function delRow(obj, prefix){
+			var id = $(prefix+"_id");
+			var delFlag = $(prefix+"_delFlag");
+			if (id.val() == ""){
+				$(obj).parent().parent().remove();
+			}else if(delFlag.val() == "0"){
+				delFlag.val("1");
+				$(obj).html("&divide;").attr("title", "撤销删除");
+				$(obj).parent().parent().addClass("error");
+			}else if(delFlag.val() == "1"){
+				delFlag.val("0");
+				$(obj).html("&times;").attr("title", "删除");
+				$(obj).parent().parent().removeClass("error");
+			}
+		}
 	</script>
 </head>
 <body>
@@ -51,40 +82,19 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">名称：</label>
+			<label class="control-label">收款方式：</label>
 			<div class="controls">
-				<form:select path="name" class="input-xlarge require">
+				<form:select path="receipt.id" class="input-xlarge required">
                     <form:option value="" label=""/>
-                    <form:options items="${inventories}" itemLabel="name" itemValue="name" htmlEscape="false"/>
+                    <form:options items="${receipts}" itemLabel="name" itemValue="id" htmlEscape="false"/>
                 </form:select>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">数量：</label>
+			<label class="control-label">折扣(%)：</label>
 			<div class="controls">
-				<form:input path="quantity" htmlEscape="false" maxlength="11" class="input-xlarge required digits"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">单位：</label>
-			<div class="controls">
-				<form:input path="unit" htmlEscape="false" maxlength="20" class="input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">价格：</label>
-			<div class="controls">
-				<form:input path="price" htmlEscape="false" class="input-xlarge required number"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">折扣：</label>
-			<div class="controls">
-				<form:input path="disaccount" htmlEscape="false" class="input-xlarge  number"/>
+				<form:input path="discount" htmlEscape="false" class="input-xlarge  number"/>
 			</div>
 		</div>
 		<div class="control-group">
@@ -94,20 +104,75 @@
 			</div>
 		</div>
 		<div class="control-group">
-            <label class="control-label">收款方式：</label>
-            <div class="controls">
-                <form:select path="receipt.id" class="input-xlarge required">
-                    <form:option value="" label=""/>
-                    <form:options items="${receipts}" itemLabel="name" itemValue="id" htmlEscape="false"/>
-                </form:select>
-            </div>
-        </div>
-		<div class="control-group">
-			<label class="control-label">备注：</label>
+			<label class="control-label">备注信息：</label>
 			<div class="controls">
-				<form:input path="remark" htmlEscape="false" maxlength="50" class="input-xlarge "/>
+				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="255" class="input-xxlarge "/>
 			</div>
 		</div>
+			<div class="control-group">
+				<label class="control-label">销售条目：</label>
+				<div class="controls">
+					<table id="contentTable" class="table table-striped table-bordered table-condensed">
+						<thead>
+							<tr>
+								<th class="hide"></th>
+								<th>名称</th>
+								<th>数量</th>
+								<th>单位</th>
+								<th>价格</th>
+								<th>备注信息</th>
+								<shiro:hasPermission name="trade:sale:edit"><th width="10">&nbsp;</th></shiro:hasPermission>
+							</tr>
+						</thead>
+						<tbody id="saleItemList">
+						</tbody>
+						<shiro:hasPermission name="trade:sale:edit"><tfoot>
+							<tr><td colspan="7"><a href="javascript:" onclick="addRow('#saleItemList', saleItemRowIdx, saleItemTpl);saleItemRowIdx = saleItemRowIdx + 1;" class="btn">新增</a></td></tr>
+						</tfoot></shiro:hasPermission>
+					</table>
+					<script type="text/template" id="saleItemTpl">//<!--
+						<tr id="saleItemList{{idx}}">
+							<td class="hide">
+								<input id="saleItemList{{idx}}_id" name="saleItemList[{{idx}}].id" type="hidden" value="{{row.id}}"/>
+								<input id="saleItemList{{idx}}_delFlag" name="saleItemList[{{idx}}].delFlag" type="hidden" value="0"/>
+							</td>
+							<td>
+								<select id="saleItemList{{idx}}_name" name="saleItemList[{{idx}}].name" data-value="{{row.name}}" class="input-small required">
+                                    <option value=""></option>
+                                    <c:forEach items="${inventories}" var="item">
+                                        <option value="${item.name}">${item.name}-${item.sellingPrice}元/${item.unit}</option>
+                                    </c:forEach>
+                                </select>
+							</td>
+							<td>
+								<input id="saleItemList{{idx}}_quantity" name="saleItemList[{{idx}}].quantity" type="text" value="{{row.quantity}}" maxlength="11" class="input-small required digits"/>
+							</td>
+							<td>
+								<input id="saleItemList{{idx}}_unit" name="saleItemList[{{idx}}].unit" type="text" value="{{row.unit}}" maxlength="20" class="input-small required"/>
+							</td>
+							<td>
+								<input id="saleItemList{{idx}}_price" name="saleItemList[{{idx}}].price" type="text" value="{{row.price}}" class="input-small required number"/>
+							</td>
+							<td>
+								<input id="saleItemList{{idx}}_remarks" name="saleItemList[{{idx}}].remarks" type="text" value="{{row.remarks}}" maxlength="255" class="input-small "/>
+							</td>
+							<shiro:hasPermission name="trade:sale:edit"><td class="text-center" width="10">
+								{{#delBtn}}<span class="close" onclick="delRow(this, '#saleItemList{{idx}}')" title="删除">&times;</span>{{/delBtn}}
+							</td></shiro:hasPermission>
+						</tr>//-->
+					</script>
+					<script type="text/javascript">
+						var saleItemRowIdx = 0, saleItemTpl = $("#saleItemTpl").html().replace(/(\/\/\<!\-\-)|(\/\/\-\->)/g,"");
+						$(document).ready(function() {
+							var data = ${fns:toJson(sale.saleItemList)};
+							for (var i=0; i<data.length; i++){
+								addRow('#saleItemList', saleItemRowIdx, saleItemTpl, data[i]);
+								saleItemRowIdx = saleItemRowIdx + 1;
+							}
+						});
+					</script>
+				</div>
+			</div>
 		<div class="form-actions">
 			<shiro:hasPermission name="trade:sale:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>

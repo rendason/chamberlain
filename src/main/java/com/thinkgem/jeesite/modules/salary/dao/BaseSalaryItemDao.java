@@ -10,7 +10,7 @@ import com.thinkgem.jeesite.modules.salary.entity.BaseSalaryItem;
 /**
  * 标准薪资DAO接口
  * @author dason
- * @version 2018-04-09
+ * @version 2018-04-10
  */
 @MyBatisDao
 public interface BaseSalaryItemDao extends CrudDao<BaseSalaryItem> {

@@ -16,7 +16,7 @@ import com.thinkgem.jeesite.modules.assets.dao.FixedAssetsDao;
 /**
  * 固定资产Service
  * @author dason
- * @version 2018-04-09
+ * @version 2018-04-10
  */
 @Service
 @Transactional(readOnly = true)
@@ -24,10 +24,6 @@ public class FixedAssetsService extends CrudService<FixedAssetsDao, FixedAssets>
 
 	public FixedAssets get(String id) {
 		return super.get(id);
-	}
-
-	public FixedAssets findOne(FixedAssets fixedAssets) {
-		return dao.findOne(fixedAssets);
 	}
 	
 	public List<FixedAssets> findList(FixedAssets fixedAssets) {

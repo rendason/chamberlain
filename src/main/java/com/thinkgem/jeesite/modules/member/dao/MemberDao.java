@@ -10,7 +10,7 @@ import com.thinkgem.jeesite.modules.member.entity.Member;
 /**
  * 会员DAO接口
  * @author dason
- * @version 2018-04-09
+ * @version 2018-04-10
  */
 @MyBatisDao
 public interface MemberDao extends CrudDao<Member> {
