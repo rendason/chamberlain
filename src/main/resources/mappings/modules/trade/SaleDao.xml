@@ -113,6 +113,8 @@
 			receipt_id = #{receipt.id},
 			discount = #{discount},
 			exempt = #{exempt},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
 			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>

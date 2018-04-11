@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.thinkgem.jeesite.modules.trade.dao.SaleItemDao">
+<mapper namespace="com.thinkgem.jeesite.modules.trade.dao.BillDao">
     
-	<sql id="saleItemColumns">
+	<sql id="billColumns">
 		a.id AS "id",
-		a.sale_id AS "sale.id",
 		a.name AS "name",
-		a.quantity AS "quantity",
-		a.unit AS "unit",
-		a.price AS "price",
+		a.payment AS "payment",
+		a.amount AS "amount",
+		a.payee AS "payee",
+		a.type AS "type",
 		a.create_by AS "createBy.id",
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
@@ -17,33 +17,41 @@
 		a.del_flag AS "delFlag"
 	</sql>
 	
-	<sql id="saleItemJoins">
-		LEFT JOIN cl_sale b ON b.id = a.sale_id
+	<sql id="billJoins">
 	</sql>
     
-	<select id="get" resultType="SaleItem">
+	<select id="get" resultType="Bill">
 		SELECT 
-			<include refid="saleItemColumns"/>
-		FROM cl_sale_item a
-		<include refid="saleItemJoins"/>
+			<include refid="billColumns"/>
+		FROM cl_bill a
+		<include refid="billJoins"/>
 		WHERE a.id = #{id}
 	</select>
 	
-	<select id="findList" resultType="SaleItem">
+	<select id="findList" resultType="Bill">
 		SELECT 
-			<include refid="saleItemColumns"/>
-		FROM cl_sale_item a
-		<include refid="saleItemJoins"/>
+			<include refid="billColumns"/>
+		FROM cl_bill a
+		<include refid="billJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
-			<if test="sale != null and sale.id != null and sale.id != ''">
-				AND a.sale_id = #{sale.id}
-			</if>
 			<if test="name != null and name != ''">
 				AND a.name LIKE 
 					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
 					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
 					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="payment != null and payment != ''">
+				AND a.payment LIKE 
+					<if test="dbName == 'oracle'">'%'||#{payment}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{payment}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{payment},'%')</if>
+			</if>
+			<if test="payee != null and payee != ''">
+				AND a.payee = #{payee}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
 			</if>
 		</where>
 		<choose>
@@ -51,16 +59,16 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.create_date ASC
+				ORDER BY a.update_date DESC
 			</otherwise>
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="SaleItem">
+	<select id="findAllList" resultType="Bill">
 		SELECT 
-			<include refid="saleItemColumns"/>
-		FROM cl_sale_item a
-		<include refid="saleItemJoins"/>
+			<include refid="billColumns"/>
+		FROM cl_bill a
+		<include refid="billJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>		
@@ -69,19 +77,19 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.create_date ASC
+				ORDER BY a.update_date DESC
 			</otherwise>
 		</choose>
 	</select>
 	
 	<insert id="insert">
-		INSERT INTO cl_sale_item(
+		INSERT INTO cl_bill(
 			id,
-			sale_id,
 			name,
-			quantity,
-			unit,
-			price,
+			payment,
+			amount,
+			payee,
+			type,
 			create_by,
 			create_date,
 			update_by,
@@ -90,11 +98,11 @@
 			del_flag
 		) VALUES (
 			#{id},
-			#{sale.id},
 			#{name},
-			#{quantity},
-			#{unit},
-			#{price},
+			#{payment},
+			#{amount},
+			#{payee},
+			#{type},
 			#{createBy.id},
 			#{createDate},
 			#{updateBy.id},
@@ -105,12 +113,12 @@
 	</insert>
 	
 	<update id="update">
-		UPDATE cl_sale_item SET 	
-			sale_id = #{sale.id},
+		UPDATE cl_bill SET 	
 			name = #{name},
-			quantity = #{quantity},
-			unit = #{unit},
-			price = #{price},
+			payment = #{payment},
+			amount = #{amount},
+			payee = #{payee},
+			type = #{type},
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks}
@@ -118,16 +126,9 @@
 	</update>
 	
 	<update id="delete">
-		UPDATE cl_sale_item SET 
+		UPDATE cl_bill SET 
 			del_flag = #{DEL_FLAG_DELETE}
-		<choose>
-			<when test="id !=null and id != ''">
-				WHERE id = #{id}
-			</when>
-			<otherwise>
-				WHERE sale_id = #{sale.id}
-			</otherwise>
-		</choose>
+		WHERE id = #{id}
 	</update>
 	
 </mapper>

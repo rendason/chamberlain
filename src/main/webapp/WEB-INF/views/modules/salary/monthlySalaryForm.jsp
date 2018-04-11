@@ -99,7 +99,7 @@
 		<div class="control-group">
 			<label class="control-label">支付：</label>
 			<div class="controls">
-				<form:radiobuttons path="paid" items="${fns:getDictList('monthly_salary_paid')}" itemLabel="label" itemValue="value" htmlEscape="false" class="required" disabled="${monthlySalary.paid==1?'true':'false'}"/>
+				<form:radiobuttons path="paid" items="${fns:getDictList('monthly_salary_paid')}" itemLabel="label" itemValue="value" htmlEscape="false" class="required" disabled="true"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>

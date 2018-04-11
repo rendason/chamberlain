@@ -76,7 +76,9 @@ public class SaleController extends BaseController {
 		model.addAttribute("sale", sale);
 		model.addAttribute("members", memberService.findList(new Member()));
 		model.addAttribute("receipts", cashService.findList(new Cash()));
-		model.addAttribute("inventories", inventoryService.findList(new Inventory()));
+		Inventory condition = new Inventory();
+		condition.setSales(Inventory.IN_SELL);
+		model.addAttribute("inventories", inventoryService.findList(condition));
 		return "modules/trade/saleForm";
 	}
 

@@ -25,6 +25,10 @@ public class FixedAssetsService extends CrudService<FixedAssetsDao, FixedAssets>
 	public FixedAssets get(String id) {
 		return super.get(id);
 	}
+
+	public FixedAssets findOne(FixedAssets fixedAssets) {
+		return dao.findOne(fixedAssets);
+	}
 	
 	public List<FixedAssets> findList(FixedAssets fixedAssets) {
 		return super.findList(fixedAssets);

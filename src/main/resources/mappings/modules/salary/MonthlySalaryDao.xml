@@ -144,6 +144,8 @@
 			month = #{month},
 			payment_id = #{payment.id},
 			paid = #{paid},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
 			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>

@@ -33,7 +33,7 @@ public class MonthlySalaryService extends CrudService<MonthlySalaryDao, MonthlyS
 	private MonthlySalaryItemDao monthlySalaryItemDao;
 
 	@Autowired
-	private CashDao cashDao;
+	private CashService cashService;
 	
 	public MonthlySalary get(String id) {
 		MonthlySalary monthlySalary = super.get(id);
@@ -80,12 +80,12 @@ public class MonthlySalaryService extends CrudService<MonthlySalaryDao, MonthlyS
 	@Transactional(readOnly = false)
 	public void pay(MonthlySalary monthlySalary) {
 		MonthlySalary result = get(monthlySalary);
-		Cash cash = cashDao.get(result.getPayment());
-		cash.setAmount(cash.getAmount() - result.getActual());
-		cash.preUpdate();
-		cashDao.update(cash);
-		result.setPaid(MonthlySalary.PAID);
-		save(result);
+		if (result.getPaid() == MonthlySalary.UNPAID) {
+			String billName = String.format("支付%s%d年%d月薪资", result.getUser().getName(), result.getYear(), result.getMonth());
+			cashService.expense(billName, result.getPayment(), monthlySalary.getUser().getName(), result.getActual());
+			result.setPaid(MonthlySalary.PAID);
+			save(result);
+		}
 	}
 	
 }

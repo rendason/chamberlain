@@ -25,7 +25,11 @@ public class InventoryService extends CrudService<InventoryDao, Inventory> {
 	public Inventory get(String id) {
 		return super.get(id);
 	}
-	
+
+	public Inventory findOne(Inventory inventory) {
+		return dao.findOne(inventory);
+	}
+
 	public List<Inventory> findList(Inventory inventory) {
 		return super.findList(inventory);
 	}

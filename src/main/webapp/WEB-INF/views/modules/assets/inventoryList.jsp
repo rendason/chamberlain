@@ -19,7 +19,6 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/assets/inventory/">库存列表</a></li>
-		<shiro:hasPermission name="assets:inventory:edit"><li><a href="${ctx}/assets/inventory/form">库存添加</a></li></shiro:hasPermission>
 	</ul>
 	<form:form id="searchForm" modelAttribute="inventory" action="${ctx}/assets/inventory/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>

@@ -102,6 +102,8 @@
 		UPDATE cl_base_salary_item SET 	
 			name = #{name},
 			amount = #{amount},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
 			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>

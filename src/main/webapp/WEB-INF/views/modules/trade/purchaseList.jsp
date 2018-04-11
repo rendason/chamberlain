@@ -46,6 +46,7 @@
 				<th>采购员</th>
 				<th>类型</th>
 				<th>供货商</th>
+				<th>金额</th>
 				<th>支付方式</th>
 				<th>更新时间</th>
 				<th>备注信息</th>
@@ -63,6 +64,9 @@
 				</td>
 				<td>
 					${purchase.seller}
+				</td>
+				<td>
+					${purchase.total}
 				</td>
 				<td>
 					${purchase.payment.name}

@@ -107,6 +107,8 @@
 			name = #{name},
 			amount = #{amount},
 			coefficient = #{coefficient},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
 			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>

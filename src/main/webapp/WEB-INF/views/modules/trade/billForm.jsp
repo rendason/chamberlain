@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>库存管理</title>
+	<title>账单管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -27,10 +27,10 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/assets/inventory/">库存列表</a></li>
-		<li class="active"><a href="${ctx}/assets/inventory/form?id=${inventory.id}">库存<shiro:hasPermission name="assets:inventory:edit">修改</shiro:hasPermission><shiro:lacksPermission name="assets:inventory:edit">查看</shiro:lacksPermission></a></li>
+		<li><a href="${ctx}/trade/bill/">账单列表</a></li>
+		<li class="active"><a href="${ctx}/trade/bill/form?id=${bill.id}">账单查看</a></li>
 	</ul><br/>
-	<form:form id="inputForm" modelAttribute="inventory" action="${ctx}/assets/inventory/save" method="post" class="form-horizontal">
+	<form:form id="inputForm" modelAttribute="bill" action="${ctx}/trade/bill/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>		
 		<div class="control-group">
@@ -41,54 +41,40 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">分类：</label>
+			<label class="control-label">付款人：</label>
 			<div class="controls">
-				<form:input path="category" htmlEscape="false" maxlength="50" class="input-xlarge"/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">数量：</label>
-			<div class="controls">
-				<form:input path="quantity" htmlEscape="false" maxlength="11" class="input-xlarge required digits" readonly="true"/>
+				<form:input path="payment" htmlEscape="false" maxlength="50" class="input-xlarge required" readonly="true"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">单位：</label>
+			<label class="control-label">金额：</label>
 			<div class="controls">
-				<form:input path="unit" htmlEscape="false" maxlength="20" class="input-xlarge required" readonly="true"/>
+				<form:input path="amount" htmlEscape="false" class="input-xlarge required number" readonly="true"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">进价：</label>
+			<label class="control-label">收款人：</label>
 			<div class="controls">
-				<form:input path="costPrice" htmlEscape="false" class="input-xlarge required number" readonly="true"/>
+				<form:input path="payee" htmlEscape="false" maxlength="50" class="input-xlarge required" readonly="true"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">售价：</label>
+			<label class="control-label">类型：</label>
 			<div class="controls">
-				<form:input path="sellingPrice" htmlEscape="false" class="input-xlarge required number"/>
-				<span class="help-inline"><font color="red">*</font> </span>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">上架：</label>
-			<div class="controls">
-				<form:radiobuttons path="sales" items="${fns:getDictList('inventory_sales')}" itemLabel="label" itemValue="value" htmlEscape="false" class="required"/>
+				<form:radiobuttons path="type" items="${fns:getDictList('bill_type')}" itemLabel="label" itemValue="value" htmlEscape="false" class="required" disabled="true"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">备注信息：</label>
 			<div class="controls">
-				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="255" class="input-xxlarge"/>
+				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="255" class="input-xxlarge" readonly="true"/>
 			</div>
 		</div>
 		<div class="form-actions">
-			<shiro:hasPermission name="assets:inventory:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>

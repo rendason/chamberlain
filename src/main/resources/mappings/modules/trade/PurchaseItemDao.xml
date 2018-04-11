@@ -110,6 +110,8 @@
 			quantity = #{quantity},
 			unit = #{unit},
 			price = #{price},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
 			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>

@@ -73,6 +73,7 @@ public class MonthlySalaryController extends BaseController {
 	@RequiresPermissions("salary:monthlySalary:view")
 	@RequestMapping(value = "form")
 	public String form(MonthlySalary monthlySalary, Model model) {
+		if (monthlySalary.getPaid() == null) monthlySalary.setPaid(MonthlySalary.UNPAID);
 		model.addAttribute("monthlySalary", monthlySalary);
 		model.addAttribute("payments", cashService.findList(new Cash()));
 		return "modules/salary/monthlySalaryForm";

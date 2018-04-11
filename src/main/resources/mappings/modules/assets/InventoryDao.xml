@@ -22,7 +22,7 @@
 	<sql id="inventoryJoins">
 	</sql>
 
-	<select id="findOne" resultType="Inventory">
+	<select id="get" resultType="Inventory">
 		SELECT
 		<include refid="inventoryColumns"/>
 		FROM cl_inventory a
@@ -30,7 +30,7 @@
 		WHERE a.id = #{id}
 	</select>
     
-	<select id="get" resultType="Inventory">
+	<select id="findOne" resultType="Inventory">
 		SELECT 
 			<include refid="inventoryColumns"/>
 		FROM cl_inventory a
@@ -43,7 +43,7 @@
 			<if test="unit != null and unit != ''">
 				AND a.unit = #{unit}
 			</if>
-			<if test="cost_price != null and cost_price != ''">
+			<if test="costPrice != null and costPrice != ''">
 				AND a.cost_price = #{costPrice}
 			</if>
 		</where>
@@ -140,6 +140,8 @@
 			cost_price = #{costPrice},
 			selling_price = #{sellingPrice},
 			sales = #{sales},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
 			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>

@@ -23,6 +23,7 @@ public class Purchase extends DataEntity<Purchase> {
 	private User user;		// 采购员
 	private Integer type;		// 类型
 	private String seller;		// 供货商
+	private Double total;		// 金额
 	private Cash payment;		// 支付方式
 	private List<PurchaseItem> purchaseItemList = Lists.newArrayList();		// 子表列表
 	
@@ -59,6 +60,14 @@ public class Purchase extends DataEntity<Purchase> {
 
 	public void setSeller(String seller) {
 		this.seller = seller;
+	}
+
+	public Double getTotal() {
+		return total;
+	}
+
+	public void setTotal(Double total) {
+		this.total = total;
 	}
 
 	@NotNull(message="支付方式不能为空")
