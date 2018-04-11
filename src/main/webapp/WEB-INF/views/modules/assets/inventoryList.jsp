@@ -45,7 +45,7 @@
 				<th>分类</th>
 				<th>数量</th>
 				<th>单位</th>
-				<th>进价</th>
+				<shiro:hasPermission name="assets:inventory:edit"><th>进价</th></shiro:hasPermission>
 				<th>售价</th>
 				<th>上架</th>
 				<th>更新时间</th>
@@ -68,9 +68,9 @@
 				<td>
 					${inventory.unit}
 				</td>
-				<td>
+				<shiro:hasPermission name="assets:inventory:edit"><td>
 					${inventory.costPrice}
-				</td>
+				</td></shiro:hasPermission>
 				<td>
 					${inventory.sellingPrice}
 				</td>

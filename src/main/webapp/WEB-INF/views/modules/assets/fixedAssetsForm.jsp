@@ -36,34 +36,34 @@
 		<div class="control-group">
 			<label class="control-label">名称：</label>
 			<div class="controls">
-				<form:input path="name" htmlEscape="false" maxlength="50" class="input-xlarge required"/>
+				<form:input path="name" htmlEscape="false" maxlength="50" class="input-xlarge required" readonly="true"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">分类：</label>
 			<div class="controls">
-				<form:input path="category" htmlEscape="false" maxlength="50" class="input-xlarge "/>
+				<form:input path="category" htmlEscape="false" maxlength="50" class="input-xlarge"/>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">数量：</label>
 			<div class="controls">
-				<form:input path="quantity" htmlEscape="false" maxlength="11" class="input-xlarge required digits"/>
+				<form:input path="quantity" htmlEscape="false" maxlength="11" class="input-xlarge required digits" readonly="true"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">单位：</label>
 			<div class="controls">
-				<form:input path="unit" htmlEscape="false" maxlength="20" class="input-xlarge required"/>
+				<form:input path="unit" htmlEscape="false" maxlength="20" class="input-xlarge required" readonly="true"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">价格：</label>
 			<div class="controls">
-				<form:input path="price" htmlEscape="false" class="input-xlarge required number"/>
+				<form:input path="price" htmlEscape="false" class="input-xlarge required number" readonly="true"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>

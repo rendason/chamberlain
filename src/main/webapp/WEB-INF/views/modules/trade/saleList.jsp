@@ -29,12 +29,12 @@
 				<sys:treeselect id="user" name="user.id" value="${sale.user.id}" labelName="user.name" labelValue="${sale.user.name}"
 					title="用户" url="/sys/office/treeData?type=3" cssClass="input-small" allowClear="true" notAllowSelectParent="true"/>
 			</li>
-			<li><label>会员：</label>
+			<%-- <li><label>会员：</label>
 				<form:select path="member.id" class="input-medium required">
                     <form:option value="" label=""/>
                     <form:options items="${members}" itemLabel="name" itemValue="id" htmlEscape="false"/>
                 </form:select>
-			</li>
+			</li> --%>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
 		</ul>

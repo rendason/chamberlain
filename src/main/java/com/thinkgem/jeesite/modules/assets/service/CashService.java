@@ -82,6 +82,16 @@ public class CashService extends CrudService<CashDao, Cash> {
 	
 	@Transactional(readOnly = false)
 	public void delete(Cash cash) {
+		cash = get(cash);
+		if (cash != null) {
+			Bill bill = new Bill();
+			bill.setName(cash.getName() + "销户");
+			bill.setPayment(cash.getName());
+			bill.setAmount(cash.getAmount());
+			bill.setPayee(UserUtils.getUser().getName());
+			bill.setType(Bill.EXPENSE_TYPE);
+			billService.save(bill);
+		}
 		super.delete(cash);
 	}
 

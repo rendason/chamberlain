@@ -43,8 +43,11 @@
 			<if test="unit != null and unit != ''">
 				AND a.unit = #{unit}
 			</if>
-			<if test="costPrice != null and costPrice != ''">
+			<if test="costPrice != null">
 				AND a.cost_price = #{costPrice}
+			</if>
+			<if test="sellingPrice != null">
+				AND a.selling_price = #{sellingPrice}
 			</if>
 		</where>
 	</select>

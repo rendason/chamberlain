@@ -60,13 +60,13 @@
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
-		<div class="control-group">
+		<shiro:hasPermission name="assets:inventory:edit"><div class="control-group">
 			<label class="control-label">进价：</label>
 			<div class="controls">
 				<form:input path="costPrice" htmlEscape="false" class="input-xlarge required number" readonly="true"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
-		</div>
+		</div></shiro:hasPermission>
 		<div class="control-group">
 			<label class="control-label">售价：</label>
 			<div class="controls">

@@ -78,6 +78,7 @@
 			<if test="paid != null and paid != ''">
 				AND a.paid = #{paid}
 			</if>
+			${sqlMap.monthlySalary}
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

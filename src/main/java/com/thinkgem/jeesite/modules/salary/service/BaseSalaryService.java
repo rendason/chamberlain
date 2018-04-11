@@ -5,6 +5,7 @@ package com.thinkgem.jeesite.modules.salary.service;
 
 import java.util.List;
 
+import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +41,7 @@ public class BaseSalaryService extends CrudService<BaseSalaryDao, BaseSalary> {
 	}
 	
 	public Page<BaseSalary> findPage(Page<BaseSalary> page, BaseSalary baseSalary) {
+		dataScopeFilter(baseSalary, "baseSalary", "", "id=a.user_id");
 		return super.findPage(page, baseSalary);
 	}
 	

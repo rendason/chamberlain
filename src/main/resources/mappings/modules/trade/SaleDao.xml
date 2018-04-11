@@ -47,6 +47,7 @@
 			<if test="member != null and member.id != null and member.id != ''">
 				AND a.member_id = #{member.id}
 			</if>
+			${sqlMap.sale}
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

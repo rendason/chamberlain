@@ -20,7 +20,7 @@
 	<sql id="fixedAssetsJoins">
 	</sql>
 
-	<select id="findOne" resultType="FixedAssets">
+	<select id="get" resultType="FixedAssets">
 		SELECT
 		<include refid="fixedAssetsColumns"/>
 		FROM cl_fixed_assets a
@@ -28,7 +28,7 @@
 		WHERE a.id = #{id}
 	</select>
     
-	<select id="get" resultType="FixedAssets">
+	<select id="findOne" resultType="FixedAssets">
 		SELECT 
 			<include refid="fixedAssetsColumns"/>
 		FROM cl_fixed_assets a

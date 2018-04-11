@@ -3,8 +3,13 @@
  */
 package com.thinkgem.jeesite.modules.trade.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.thinkgem.jeesite.modules.assets.entity.Inventory;
+import com.thinkgem.jeesite.modules.assets.service.CashService;
+import com.thinkgem.jeesite.modules.assets.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +33,12 @@ public class SaleService extends CrudService<SaleDao, Sale> {
 
 	@Autowired
 	private SaleItemDao saleItemDao;
+
+	@Autowired
+	private InventoryService inventoryService;
+
+	@Autowired
+	private CashService cashService;
 	
 	public Sale get(String id) {
 		Sale sale = super.get(id);
@@ -40,30 +51,32 @@ public class SaleService extends CrudService<SaleDao, Sale> {
 	}
 	
 	public Page<Sale> findPage(Page<Sale> page, Sale sale) {
+		dataScopeFilter(sale, "sale", "", "id=a.seller_id");
 		return super.findPage(page, sale);
 	}
 	
 	@Transactional(readOnly = false)
 	public void save(Sale sale) {
-		if (sale.getDiscount() == null) sale.setDiscount(100);
-		if (sale.getExempt() == null) sale.setExempt(0.0);
 		super.save(sale);
+		double cost = 0;
 		for (SaleItem saleItem : sale.getSaleItemList()){
-			if (saleItem.getId() == null){
-				continue;
+			if (saleItem.getId() != null && StringUtils.isBlank(saleItem.getId())){
+				saleItem.setSale(sale);
+				saleItem.preInsert();
+				saleItemDao.insert(saleItem);
+				cost += saleItem.getQuantity() * saleItem.getPrice();
+				Inventory inventory = new Inventory();
+				inventory.setName(saleItem.getName());
+				inventory.setSellingPrice(saleItem.getPrice());
+				inventory.setUnit(saleItem.getUnit());
+				inventory = inventoryService.findOne(inventory);
+				inventory.setQuantity(inventory.getQuantity() - saleItem.getQuantity());
+				inventoryService.save(inventory);
 			}
-			if (SaleItem.DEL_FLAG_NORMAL.equals(saleItem.getDelFlag())){
-				if (StringUtils.isBlank(saleItem.getId())){
-					saleItem.setSale(sale);
-					saleItem.preInsert();
-					saleItemDao.insert(saleItem);
-				}else{
-					saleItem.preUpdate();
-					saleItemDao.update(saleItem);
-				}
-			}else{
-				saleItemDao.delete(saleItem);
-			}
+		}
+		if (cost != 0) {
+			String billName = sale.getSaleItemList().stream().map(SaleItem::getName).collect(Collectors.joining(",", "销售", ""));
+			cashService.income(billName, sale.getReceipt(), "散客", cost * sale.getDiscount() / 100 - sale.getExempt());
 		}
 	}
 	
@@ -71,6 +84,25 @@ public class SaleService extends CrudService<SaleDao, Sale> {
 	public void delete(Sale sale) {
 		super.delete(sale);
 		saleItemDao.delete(new SaleItem(sale));
+	}
+
+	public void enough(Sale sale) {
+		List<String> messages = new ArrayList<>();
+		for (SaleItem saleItem : sale.getSaleItemList()) {
+			if (saleItem.getId() != null && StringUtils.isBlank(saleItem.getId())) {
+				Inventory inventory = new Inventory();
+				inventory.setName(saleItem.getName());
+				inventory.setSellingPrice(saleItem.getPrice());
+				inventory.setUnit(saleItem.getUnit());
+				inventory = inventoryService.findOne(inventory);
+				if (inventory.getQuantity() < saleItem.getQuantity()) {
+					messages.add(inventory.getName() + "库存不足");
+				}
+			}
+		}
+		if (!messages.isEmpty()) {
+			throw new IllegalArgumentException(String.join(",", messages));
+		}
 	}
 	
 }

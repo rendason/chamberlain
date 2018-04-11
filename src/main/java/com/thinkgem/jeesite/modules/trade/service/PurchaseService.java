@@ -5,6 +5,7 @@ package com.thinkgem.jeesite.modules.trade.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.thinkgem.jeesite.modules.assets.dao.CashDao;
@@ -68,58 +69,49 @@ public class PurchaseService extends CrudService<PurchaseDao, Purchase> {
 		super.save(purchase);
 		double cost = 0;
 		for (PurchaseItem purchaseItem : purchase.getPurchaseItemList()){
-			if (purchaseItem.getId() == null){
-				continue;
-			}
-			if (PurchaseItem.DEL_FLAG_NORMAL.equals(purchaseItem.getDelFlag())){
-				if (StringUtils.isBlank(purchaseItem.getId())){
-					purchaseItem.setPurchase(purchase);
-					purchaseItem.preInsert();
-					purchaseItemDao.insert(purchaseItem);
-					cost += purchaseItem.getPrice() * purchaseItem.getQuantity();
-					if (purchase.getType() == Purchase.INVENTORY_TYPE) {
-						Inventory inventory = new Inventory();
-						inventory.setName(purchaseItem.getName());
-						inventory.setUnit(purchaseItem.getUnit());
-						inventory.setCostPrice(purchaseItem.getPrice());
-						Inventory old = inventoryService.findOne(inventory);
-						if (old != null) {
-							old.setQuantity(old.getQuantity() + purchaseItem.getQuantity());
-							old.setRemarks(combineRemarks(old.getRemarks(), purchaseItem.getRemarks()));
-							inventoryService.save(old);
-						} else {
-							inventory.setQuantity(purchaseItem.getQuantity());
-							inventory.setSales(Inventory.NOT_SELL);
-							inventory.setSellingPrice(0.0);
-							inventory.setRemarks(purchaseItem.getRemarks());
-							inventoryService.save(inventory);
-						}
+			if (purchaseItem.getId() != null && StringUtils.isBlank(purchaseItem.getId())) {
+				purchaseItem.setPurchase(purchase);
+				purchaseItem.preInsert();
+				purchaseItemDao.insert(purchaseItem);
+				cost += purchaseItem.getPrice() * purchaseItem.getQuantity();
+				if (purchase.getType() == Purchase.INVENTORY_TYPE) {
+					Inventory inventory = new Inventory();
+					inventory.setName(purchaseItem.getName());
+					inventory.setUnit(purchaseItem.getUnit());
+					inventory.setCostPrice(purchaseItem.getPrice());
+					Inventory old = inventoryService.findOne(inventory);
+					if (old != null) {
+						old.setQuantity(old.getQuantity() + purchaseItem.getQuantity());
+						old.setRemarks(combineRemarks(old.getRemarks(), purchaseItem.getRemarks()));
+						inventoryService.save(old);
 					} else {
-						FixedAssets fixedAssets = new FixedAssets();
-						fixedAssets.setName(purchaseItem.getName());
-						fixedAssets.setUnit(purchaseItem.getUnit());
-						fixedAssets.setPrice(purchaseItem.getPrice());
-						FixedAssets old = fixedAssetsService.findOne(fixedAssets);
-						if (old != null) {
-							old.setQuantity(old.getQuantity() + purchaseItem.getQuantity());
-							old.setRemarks(combineRemarks(old.getRemarks(), purchaseItem.getRemarks()));
-							fixedAssetsService.save(old);
-						} else {
-							fixedAssets.setQuantity(purchaseItem.getQuantity());
-							fixedAssets.setRemarks(purchaseItem.getRemarks());
-							fixedAssetsService.save(fixedAssets);
-						}
+						inventory.setQuantity(purchaseItem.getQuantity());
+						inventory.setSales(Inventory.NOT_SELL);
+						inventory.setSellingPrice(0.0);
+						inventory.setRemarks(purchaseItem.getRemarks());
+						inventoryService.save(inventory);
 					}
-				}else{
-					purchaseItem.preUpdate();
-					purchaseItemDao.update(purchaseItem);
+				} else {
+					FixedAssets fixedAssets = new FixedAssets();
+					fixedAssets.setName(purchaseItem.getName());
+					fixedAssets.setUnit(purchaseItem.getUnit());
+					fixedAssets.setPrice(purchaseItem.getPrice());
+					FixedAssets old = fixedAssetsService.findOne(fixedAssets);
+					if (old != null) {
+						old.setQuantity(old.getQuantity() + purchaseItem.getQuantity());
+						old.setRemarks(combineRemarks(old.getRemarks(), purchaseItem.getRemarks()));
+						fixedAssetsService.save(old);
+					} else {
+						fixedAssets.setQuantity(purchaseItem.getQuantity());
+						fixedAssets.setRemarks(purchaseItem.getRemarks());
+						fixedAssetsService.save(fixedAssets);
+					}
 				}
-			}else{
-				purchaseItemDao.delete(purchaseItem);
 			}
 		}
 		if (cost != 0) {
-			cashService.expense("支付" + purchase.getSeller() + "货款", purchase.getPayment(), purchase.getSeller(), cost);
+			String billName = purchase.getPurchaseItemList().stream().map(PurchaseItem::getName).collect(Collectors.joining(",", "采购", ""));
+			cashService.expense(billName, purchase.getPayment(), purchase.getSeller(), cost);
 		}
 	}
 	
@@ -127,6 +119,19 @@ public class PurchaseService extends CrudService<PurchaseDao, Purchase> {
 	public void delete(Purchase purchase) {
 		super.delete(purchase);
 		purchaseItemDao.delete(new PurchaseItem(purchase));
+	}
+
+	public void enough(Purchase purchase) {
+		double cost = 0;
+		for (PurchaseItem purchaseItem : purchase.getPurchaseItemList()) {
+			if (purchaseItem.getId() != null && StringUtils.isBlank(purchaseItem.getId())) {
+				cost += purchaseItem.getQuantity() * purchaseItem.getPrice();
+			}
+		}
+		Cash cash = cashService.get(purchase.getPayment());
+		if (cash.getAmount() < cost) {
+			throw new IllegalArgumentException(cash.getName() + "余额不足");
+		}
 	}
 
 	private String combineRemarks(String remarks1, String remarks2) {

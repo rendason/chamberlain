@@ -42,7 +42,7 @@ public class SaleItem extends DataEntity<SaleItem> {
 	public void setSale(Sale sale) {
 		this.sale = sale;
 	}
-	
+
 	@Length(min=1, max=50, message="名称长度必须介于 1 和 50 之间")
 	public String getName() {
 		return name;

@@ -48,22 +48,22 @@ public class DateConverter implements Converter {
 	/**
 	 * Convert String to Date
 	 *
-	 * @param value
-	 * @return
-	 * @throws ParseException 
+	 * @param value 时间字符串
+	 * @return 时间对象
+	 * @throws ParseException  解析异常
 	 */
 	private Date doConvertToDate(Object value) throws ParseException {
 		Date result = null;
 
 		if (value instanceof String) {
-			result = DateUtils.parseDate((String) value, new String[] { DATE_PATTERN, DATETIME_PATTERN,
-					DATETIME_PATTERN_NO_SECOND, MONTH_PATTERN });
+			result = DateUtils.parseDate((String) value, DATE_PATTERN, DATETIME_PATTERN,
+					DATETIME_PATTERN_NO_SECOND, MONTH_PATTERN );
 
 			// all patterns failed, try a milliseconds constructor
 			if (result == null && StringUtils.isNotEmpty((String) value)) {
 
 				try {
-					result = new Date(new Long((String) value).longValue());
+					result = new Date(new Long((String) value));
 				} catch (Exception e) {
 					logger.error("Converting from milliseconds to Date fails!");
 					e.printStackTrace();
@@ -89,8 +89,8 @@ public class DateConverter implements Converter {
 	/**
 	 * Convert Date to String
 	 *
-	 * @param value
-	 * @return
+	 * @param value 时间对象
+	 * @return 当value是Date类型时返回时间字符创，否则返回null
 	 */
 	private String doConvertToString(Object value) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATETIME_PATTERN);

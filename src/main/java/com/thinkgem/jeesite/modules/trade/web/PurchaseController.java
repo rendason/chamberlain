@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.thinkgem.jeesite.modules.assets.entity.Cash;
 import com.thinkgem.jeesite.modules.assets.service.CashService;
+import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -62,6 +63,7 @@ public class PurchaseController extends BaseController {
 	@RequiresPermissions("trade:purchase:view")
 	@RequestMapping(value = "form")
 	public String form(Purchase purchase, Model model) {
+		if (purchase.getUser() == null) purchase.setUser(UserUtils.getUser());
 		model.addAttribute("purchase", purchase);
 		model.addAttribute("payments", cashService.findList(new Cash()));
 		return "modules/trade/purchaseForm";
@@ -70,7 +72,7 @@ public class PurchaseController extends BaseController {
 	@RequiresPermissions("trade:purchase:edit")
 	@RequestMapping(value = "save")
 	public String save(Purchase purchase, Model model, RedirectAttributes redirectAttributes) {
-		if (!beanValidator(model, purchase)){
+		if (!beanValidator(model, purchase) || !cashValidator(model, purchase)){
 			return form(purchase, model);
 		}
 		purchaseService.save(purchase);
@@ -84,6 +86,16 @@ public class PurchaseController extends BaseController {
 		purchaseService.delete(purchase);
 		addMessage(redirectAttributes, "删除采购成功");
 		return "redirect:"+Global.getAdminPath()+"/trade/purchase/?repage";
+	}
+
+	private boolean cashValidator(Model model, Purchase purchase) {
+		try {
+			purchaseService.enough(purchase);
+			return true;
+		} catch (Exception e) {
+			addMessage(model, e.getMessage());
+			return false;
+		}
 	}
 
 }

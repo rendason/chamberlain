@@ -68,11 +68,11 @@
 			<label class="control-label">销售员：</label>
 			<div class="controls">
 				<sys:treeselect id="user" name="user.id" value="${sale.user.id}" labelName="user.name" labelValue="${sale.user.name}"
-					title="用户" url="/sys/office/treeData?type=3" cssClass="required" allowClear="true" notAllowSelectParent="true"/>
+					title="用户" url="/sys/office/treeData?type=3" cssClass="required" allowClear="true" notAllowSelectParent="true" disabled="${not empty sale.id?'disabled':''}"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
-		<div class="control-group">
+		<%-- <div class="control-group">
 			<label class="control-label">会员：</label>
 			<div class="controls">
 				<form:select path="member.id" class="input-xlarge">
@@ -80,11 +80,11 @@
                     <form:options items="${members}" itemLabel="name" itemValue="id" htmlEscape="false"/>
                 </form:select>
 			</div>
-		</div>
+		</div> --%>
 		<div class="control-group">
 			<label class="control-label">收款方式：</label>
 			<div class="controls">
-				<form:select path="receipt.id" class="input-xlarge required">
+				<form:select path="receipt.id" class="input-xlarge required" disabled="${not empty sale.id?'true':'false'}">
                     <form:option value="" label=""/>
                     <form:options items="${receipts}" itemLabel="name" itemValue="id" htmlEscape="false"/>
                 </form:select>
@@ -94,19 +94,19 @@
 		<div class="control-group">
 			<label class="control-label">折扣(%)：</label>
 			<div class="controls">
-				<form:input path="discount" htmlEscape="false" class="input-xlarge  number"/>
+				<form:input path="discount" htmlEscape="false" class="input-xlarge  number" readonly="${not empty sale.id?'true':'false'}"/>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">减免：</label>
 			<div class="controls">
-				<form:input path="exempt" htmlEscape="false" class="input-xlarge  number"/>
+				<form:input path="exempt" htmlEscape="false" class="input-xlarge  number" readonly="${not empty sale.id?'true':'false'}"/>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">备注信息：</label>
 			<div class="controls">
-				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="255" class="input-xxlarge "/>
+				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="255" class="input-xxlarge" readonly="${not empty sale.id?'true':'false'}"/>
 			</div>
 		</div>
 			<div class="control-group">
@@ -121,14 +121,14 @@
 								<th>单位</th>
 								<th>价格</th>
 								<th>备注信息</th>
-								<shiro:hasPermission name="trade:sale:edit"><th width="10">&nbsp;</th></shiro:hasPermission>
+								<shiro:hasPermission name="trade:sale:edit"><c:if test="${empty sale.id}"><th width="10">&nbsp;</th></c:if></shiro:hasPermission>
 							</tr>
 						</thead>
 						<tbody id="saleItemList">
 						</tbody>
-						<shiro:hasPermission name="trade:sale:edit"><tfoot>
+						<shiro:hasPermission name="trade:sale:edit"><c:if test="${empty sale.id}"><tfoot>
 							<tr><td colspan="7"><a href="javascript:" onclick="addRow('#saleItemList', saleItemRowIdx, saleItemTpl);saleItemRowIdx = saleItemRowIdx + 1;" class="btn">新增</a></td></tr>
-						</tfoot></shiro:hasPermission>
+						</tfoot></c:if></shiro:hasPermission>
 					</table>
 					<script type="text/template" id="saleItemTpl">//<!--
 						<tr id="saleItemList{{idx}}">
@@ -137,7 +137,7 @@
 								<input id="saleItemList{{idx}}_delFlag" name="saleItemList[{{idx}}].delFlag" type="hidden" value="0"/>
 							</td>
 							<td>
-								<select id="saleItemList{{idx}}_name" name="saleItemList[{{idx}}].name" data-value="{{row.name}}" class="input-small required">
+								<select id="saleItemList{{idx}}_name" name="saleItemList[{{idx}}].name" data-value="{{row.name}}" class="input-small required" ${not empty sale.id?'disabled':''}>
                                     <option value=""></option>
                                     <c:forEach items="${inventories}" var="item">
                                         <option value="${item.name}">${item.name}-${item.sellingPrice}元/${item.unit}</option>
@@ -145,20 +145,20 @@
                                 </select>
 							</td>
 							<td>
-								<input id="saleItemList{{idx}}_quantity" name="saleItemList[{{idx}}].quantity" type="text" value="{{row.quantity}}" maxlength="11" class="input-small required digits"/>
+								<input id="saleItemList{{idx}}_quantity" name="saleItemList[{{idx}}].quantity" type="text" value="{{row.quantity}}" maxlength="11" class="input-small required digits" ${not empty sale.id?'disabled':''}/>
 							</td>
 							<td>
-								<input id="saleItemList{{idx}}_unit" name="saleItemList[{{idx}}].unit" type="text" value="{{row.unit}}" maxlength="20" class="input-small required"/>
+								<input id="saleItemList{{idx}}_unit" name="saleItemList[{{idx}}].unit" type="text" value="{{row.unit}}" maxlength="20" class="input-small required" ${not empty sale.id?'disabled':''}/>
 							</td>
 							<td>
-								<input id="saleItemList{{idx}}_price" name="saleItemList[{{idx}}].price" type="text" value="{{row.price}}" class="input-small required number"/>
+								<input id="saleItemList{{idx}}_price" name="saleItemList[{{idx}}].price" type="text" value="{{row.price}}" class="input-small required number" ${not empty sale.id?'disabled':''}/>
 							</td>
 							<td>
-								<input id="saleItemList{{idx}}_remarks" name="saleItemList[{{idx}}].remarks" type="text" value="{{row.remarks}}" maxlength="255" class="input-small "/>
+								<input id="saleItemList{{idx}}_remarks" name="saleItemList[{{idx}}].remarks" type="text" value="{{row.remarks}}" maxlength="255" class="input-small" ${not empty sale.id?'disabled':''}/>
 							</td>
-							<shiro:hasPermission name="trade:sale:edit"><td class="text-center" width="10">
+							<shiro:hasPermission name="trade:sale:edit"><c:if test="${empty sale.id}"><td class="text-center" width="10">
 								{{#delBtn}}<span class="close" onclick="delRow(this, '#saleItemList{{idx}}')" title="删除">&times;</span>{{/delBtn}}
-							</td></shiro:hasPermission>
+							</td></c:if></shiro:hasPermission>
 						</tr>//-->
 					</script>
 					<script type="text/javascript">
@@ -174,7 +174,7 @@
 				</div>
 			</div>
 		<div class="form-actions">
-			<shiro:hasPermission name="trade:sale:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
+			<shiro:hasPermission name="trade:sale:edit"><c:if test="${empty sale.id}"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</c:if></shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>

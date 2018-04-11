@@ -38,6 +38,7 @@
 			<if test="user != null and user.id != null and user.id != ''">
 				AND a.user_id = #{user.id}
 			</if>
+			${sqlMap.baseSalary}
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

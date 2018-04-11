@@ -12,6 +12,7 @@ import com.thinkgem.jeesite.modules.assets.service.CashService;
 import com.thinkgem.jeesite.modules.assets.service.InventoryService;
 import com.thinkgem.jeesite.modules.member.entity.Member;
 import com.thinkgem.jeesite.modules.member.service.MemberService;
+import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -73,6 +74,9 @@ public class SaleController extends BaseController {
 	@RequiresPermissions("trade:sale:view")
 	@RequestMapping(value = "form")
 	public String form(Sale sale, Model model) {
+		if (sale.getUser() == null) sale.setUser(UserUtils.getUser());
+		if (sale.getDiscount() == null) sale.setDiscount(100);
+		if (sale.getExempt() == null) sale.setExempt(0.0);
 		model.addAttribute("sale", sale);
 		model.addAttribute("members", memberService.findList(new Member()));
 		model.addAttribute("receipts", cashService.findList(new Cash()));
@@ -85,7 +89,7 @@ public class SaleController extends BaseController {
 	@RequiresPermissions("trade:sale:edit")
 	@RequestMapping(value = "save")
 	public String save(Sale sale, Model model, RedirectAttributes redirectAttributes) {
-		if (!beanValidator(model, sale)){
+		if (!beanValidator(model, sale) || !inventoryValidator(model, sale)){
 			return form(sale, model);
 		}
 		saleService.save(sale);
@@ -99,6 +103,16 @@ public class SaleController extends BaseController {
 		saleService.delete(sale);
 		addMessage(redirectAttributes, "删除销售成功");
 		return "redirect:"+Global.getAdminPath()+"/trade/sale/?repage";
+	}
+
+	private boolean inventoryValidator(Model model, Sale sale) {
+		try {
+			saleService.enough(sale);
+			return true;
+		} catch (Exception e) {
+			addMessage(model, e.getMessage().split(","));
+			return false;
+		}
 	}
 
 }

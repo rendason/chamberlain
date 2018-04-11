@@ -46,6 +46,7 @@ public class MonthlySalaryService extends CrudService<MonthlySalaryDao, MonthlyS
 	}
 	
 	public Page<MonthlySalary> findPage(Page<MonthlySalary> page, MonthlySalary monthlySalary) {
+		dataScopeFilter(monthlySalary, "monthlySalary", "", "id=a.user_id");
 		return super.findPage(page, monthlySalary);
 	}
 	
