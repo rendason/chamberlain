@@ -44,10 +44,13 @@
 		<thead>
 			<tr>
 				<th>销售员</th>
-				<th>会员</th>
+				<%-- <th>会员</th> --%>
+				<th>数量</th>
 				<th>收款方式</th>
+				<th>应收</th>
 				<th>折扣(%)</th>
 				<th>减免</th>
+                <th>实收</th>
 				<th>更新时间</th>
 				<th>备注信息</th>
 				<shiro:hasPermission name="trade:sale:edit"><th>操作</th></shiro:hasPermission>
@@ -59,17 +62,26 @@
 				<td><a href="${ctx}/trade/sale/form?id=${sale.id}">
 					${sale.user.name}
 				</a></td>
-				<td>
+				<%-- <td>
 					${sale.member.name}
+				</td> --%>
+				<td>
+					${sale.quantity}
 				</td>
 				<td>
-					${sale.receipt.name}
+                    ${sale.receipt.name}
+                </td>
+				<td>
+					${sale.expected}
 				</td>
 				<td>
 					${sale.discount}
 				</td>
 				<td>
 					${sale.exempt}
+				</td>
+				<td>
+					${sale.actual}
 				</td>
 				<td>
 					<fmt:formatDate value="${sale.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>

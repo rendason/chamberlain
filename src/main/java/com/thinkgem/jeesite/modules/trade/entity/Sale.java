@@ -24,8 +24,11 @@ public class Sale extends DataEntity<Sale> {
 	private User user;		// 销售员
 	private Member member;		// 会员
 	private Cash receipt;		// 收款方式
+	private Integer quantity;		// 数量
 	private Integer discount;		// 折扣(%)
 	private Double exempt;		// 减免
+	private Double expected;		// 应收
+	private Double actual;		// 实收
 	private List<SaleItem> saleItemList = Lists.newArrayList();		// 子表列表
 	
 	public Sale() {
@@ -62,6 +65,14 @@ public class Sale extends DataEntity<Sale> {
 		this.receipt = receipt;
 	}
 
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
 	public Integer getDiscount() {
 		return discount;
 	}
@@ -77,7 +88,23 @@ public class Sale extends DataEntity<Sale> {
 	public void setExempt(Double exempt) {
 		this.exempt = exempt;
 	}
-	
+
+	public Double getExpected() {
+		return expected;
+	}
+
+	public void setExpected(Double expected) {
+		this.expected = expected;
+	}
+
+	public Double getActual() {
+		return actual;
+	}
+
+	public void setActual(Double actual) {
+		this.actual = actual;
+	}
+
 	public List<SaleItem> getSaleItemList() {
 		return saleItemList;
 	}

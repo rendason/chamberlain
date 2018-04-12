@@ -17,13 +17,22 @@
 		a.del_flag AS "delFlag",
 		u2.name AS "user.name",
 		m.name AS "member.name",
-		c.name AS "receipt.name"
+		c.name AS "receipt.name",
+		IFNULL(d.count, 0) AS "quantity",
+		IFNULL(d.total, 0) AS "expected",
+		IFNULL(d.total * a.discount / 100 - a.exempt, 0) AS "actual"
 	</sql>
 	
 	<sql id="saleJoins">
 		LEFT JOIN sys_user u2 ON u2.id = a.seller_id
 		LEFT JOIN cl_member m ON m.id = a.member_id
 		LEFT JOIN cl_cash c ON c.id = a.receipt_id
+		LEFT JOIN (
+			SELECT sale_id, COUNT(id) count, SUM(price * quantity) total
+			FROM cl_sale_item
+			WHERE del_flag = #{DEL_FLAG_NORMAL}
+			GROUP BY sale_id
+		) d ON d.sale_id = a.id
 	</sql>
     
 	<select id="get" resultType="Sale">
