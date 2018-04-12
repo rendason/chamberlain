@@ -14,5 +14,7 @@ import com.thinkgem.jeesite.modules.salary.entity.BaseSalary;
  */
 @MyBatisDao
 public interface BaseSalaryDao extends CrudDao<BaseSalary> {
+
+    BaseSalary findOne(BaseSalary baseSalary);
 	
 }

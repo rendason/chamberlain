@@ -75,7 +75,15 @@ public class SaleService extends CrudService<SaleDao, Sale> {
 			}
 		}
 		if (cost != 0) {
-			String billName = sale.getSaleItemList().stream().map(SaleItem::getName).collect(Collectors.joining(",", "销售", ""));
+			StringBuilder stringBuilder = new StringBuilder("销售");
+			int count = 0;
+			for (SaleItem saleItem : sale.getSaleItemList()) {
+				stringBuilder.append(saleItem.getName());
+				count++;
+			}
+			String billName = count == 1
+					? (stringBuilder.length() > 50 ? stringBuilder.substring(0, 47) + "..." : stringBuilder.toString())
+					: (stringBuilder.length() > 50 ? stringBuilder.substring(0, 46) + "...等" : stringBuilder.toString());
 			cashService.income(billName, sale.getReceipt(), "散客", cost * sale.getDiscount() / 100 - sale.getExempt());
 		}
 	}

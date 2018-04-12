@@ -27,6 +27,19 @@
 		<include refid="baseSalaryJoins"/>
 		WHERE a.id = #{id}
 	</select>
+
+	<select id="findOne" resultType="BaseSalary">
+		SELECT
+		<include refid="baseSalaryColumns"/>
+		FROM cl_base_salary a
+		<include refid="baseSalaryJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+		</where>
+	</select>
 	
 	<select id="findList" resultType="BaseSalary">
 		SELECT 

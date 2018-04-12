@@ -3,6 +3,7 @@
  */
 package com.thinkgem.jeesite.modules.salary.service;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
@@ -33,6 +34,16 @@ public class BaseSalaryService extends CrudService<BaseSalaryDao, BaseSalary> {
 	public BaseSalary get(String id) {
 		BaseSalary baseSalary = super.get(id);
 		baseSalary.setBaseSalaryItemList(baseSalaryItemDao.findList(new BaseSalaryItem(baseSalary)));
+		return baseSalary;
+	}
+
+	public BaseSalary findOne(BaseSalary baseSalary) {
+		if (baseSalary.getUser() != null && (baseSalary = dao.findOne(baseSalary)) != null) {
+			baseSalary.setBaseSalaryItemList(baseSalaryItemDao.findList(new BaseSalaryItem(baseSalary)));
+			return baseSalary;
+		}
+		baseSalary = new BaseSalary();
+		baseSalary.setBaseSalaryItemList(Collections.emptyList());
 		return baseSalary;
 	}
 	

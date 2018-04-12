@@ -54,6 +54,16 @@
 				$(obj).parent().parent().removeClass("error");
 			}
 		}
+
+		function changeInventory(e) {
+		    var select = $(e);
+		    var idPrefix = select.attr("id").replace("name", "");
+		    var option = select.find("option:selected");
+		    $("#" + idPrefix + "quantity").attr("max", option.attr("data-quantity"));
+		    $("#" + idPrefix + "quantity").val("1");
+		    $("#" + idPrefix + "unit").val(option.attr("data-unit"));
+		    $("#" + idPrefix + "price").val(option.attr("data-price"));
+		}
 	</script>
 </head>
 <body>
@@ -68,7 +78,7 @@
 			<label class="control-label">销售员：</label>
 			<div class="controls">
 				<sys:treeselect id="user" name="user.id" value="${sale.user.id}" labelName="user.name" labelValue="${sale.user.name}"
-					title="用户" url="/sys/office/treeData?type=3" cssClass="required" allowClear="true" notAllowSelectParent="true" disabled="${not empty sale.id?'disabled':''}"/>
+					title="用户" url="/sys/office/treeData?type=3" cssClass="required" allowClear="true" notAllowSelectParent="true" disabled="disabled"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
@@ -137,21 +147,21 @@
 								<input id="saleItemList{{idx}}_delFlag" name="saleItemList[{{idx}}].delFlag" type="hidden" value="0"/>
 							</td>
 							<td>
-								<select id="saleItemList{{idx}}_name" name="saleItemList[{{idx}}].name" data-value="{{row.name}}" class="input-small required" ${not empty sale.id?'disabled':''}>
+								<select id="saleItemList{{idx}}_name" name="saleItemList[{{idx}}].name" data-value="{{row.name}}" class="input-small required" onchange="changeInventory(this)" ${not empty sale.id?'disabled':''}>
                                     <option value=""></option>
                                     <c:forEach items="${inventories}" var="item">
-                                        <option value="${item.name}">${item.name}-${item.sellingPrice}元/${item.unit}</option>
+                                        <option value="${item.name}" data-price="${item.sellingPrice}" data-quantity="${item.quantity}" data-unit="${item.unit}">${item.name}-${item.sellingPrice}元/${item.unit}</option>
                                     </c:forEach>
                                 </select>
 							</td>
 							<td>
-								<input id="saleItemList{{idx}}_quantity" name="saleItemList[{{idx}}].quantity" type="text" value="{{row.quantity}}" maxlength="11" class="input-small required digits" ${not empty sale.id?'disabled':''}/>
+								<input id="saleItemList{{idx}}_quantity" name="saleItemList[{{idx}}].quantity" type="number" value="{{row.quantity}}" min="1" class="input-small required digits" ${not empty sale.id?'disabled':''}/>
 							</td>
 							<td>
-								<input id="saleItemList{{idx}}_unit" name="saleItemList[{{idx}}].unit" type="text" value="{{row.unit}}" maxlength="20" class="input-small required" ${not empty sale.id?'disabled':''}/>
+								<input id="saleItemList{{idx}}_unit" name="saleItemList[{{idx}}].unit" type="text" value="{{row.unit}}" maxlength="20" class="input-small required" disabled/>
 							</td>
 							<td>
-								<input id="saleItemList{{idx}}_price" name="saleItemList[{{idx}}].price" type="text" value="{{row.price}}" class="input-small required number" ${not empty sale.id?'disabled':''}/>
+								<input id="saleItemList{{idx}}_price" name="saleItemList[{{idx}}].price" type="text" value="{{row.price}}" class="input-small required number" disabled/>
 							</td>
 							<td>
 								<input id="saleItemList{{idx}}_remarks" name="saleItemList[{{idx}}].remarks" type="text" value="{{row.remarks}}" maxlength="255" class="input-small" ${not empty sale.id?'disabled':''}/>

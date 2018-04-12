@@ -68,7 +68,7 @@
 			<label class="control-label">采购员：</label>
 			<div class="controls">
 				<sys:treeselect id="user" name="user.id" value="${purchase.user.id}" labelName="user.name" labelValue="${purchase.user.name}"
-					title="用户" url="/sys/office/treeData?type=3" cssClass="required" allowClear="true" notAllowSelectParent="true" disabled="${not empty purchase.id?'disabled':''}"/>
+					title="用户" url="/sys/office/treeData?type=3" cssClass="required" allowClear="true" notAllowSelectParent="true" disabled="disabled"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>

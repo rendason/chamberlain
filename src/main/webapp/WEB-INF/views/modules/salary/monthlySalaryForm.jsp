@@ -54,6 +54,16 @@
 				$(obj).parent().parent().removeClass("error");
 			}
 		}
+		function propertyChange(element, attr, func) {
+		    var old = element.attr(attr);
+		    setInterval(function(){
+		        var current = element.attr(attr);
+		        if (current != old) {
+		            func(current);
+		            old = current;
+		        }
+		    }, 100);
+		}
 	</script>
 </head>
 <body>
@@ -165,6 +175,18 @@
 								monthlySalaryItemRowIdx = monthlySalaryItemRowIdx + 1;
 							}
 						});
+						propertyChange($("#userId"), "value", function(userId){
+                            $.get("${ctx}/salary/baseSalary/get?user.id=" + userId, function(res){
+                                $("#monthlySalaryItemList").empty();
+                                monthlySalaryItemRowIdx = 0;
+                                var data = res.baseSalaryItemList;
+                                for (var i = 0; i < data.length; i++) {
+                                    data[i].coefficient = 1;
+                                    addRow('#monthlySalaryItemList', monthlySalaryItemRowIdx, monthlySalaryItemTpl, data[i]);
+                                    monthlySalaryItemRowIdx = monthlySalaryItemRowIdx + 1;
+                                }
+                            });
+                        });
 					</script>
 				</div>
 			</div>

@@ -110,7 +110,15 @@ public class PurchaseService extends CrudService<PurchaseDao, Purchase> {
 			}
 		}
 		if (cost != 0) {
-			String billName = purchase.getPurchaseItemList().stream().map(PurchaseItem::getName).collect(Collectors.joining(",", "采购", ""));
+			StringBuilder stringBuilder = new StringBuilder("销售");
+			int count = 0;
+			for (PurchaseItem purchaseItem : purchase.getPurchaseItemList()) {
+				stringBuilder.append(purchaseItem.getName());
+				count++;
+			}
+			String billName = count == 1
+					? (stringBuilder.length() > 50 ? stringBuilder.substring(0, 47) + "..." : stringBuilder.toString())
+					: (stringBuilder.length() > 50 ? stringBuilder.substring(0, 46) + "...等" : stringBuilder.toString());
 			cashService.expense(billName, purchase.getPayment(), purchase.getSeller(), cost);
 		}
 	}
