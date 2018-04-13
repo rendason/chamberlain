@@ -16,14 +16,15 @@
 		a.del_flag AS "delFlag",
 		u2.name AS "user.name",
 		c.name AS "payment.name",
-		d.total AS "total"
+		IFNULL(d.count, 0) AS "kind",
+		IFNULL(d.total, 0) AS "total"
 	</sql>
 	
 	<sql id="purchaseJoins">
 		LEFT JOIN sys_user u2 ON u2.id = a.consumer_id
 		LEFT JOIN cl_cash c ON c.id = a.payment_id
 		LEFT JOIN (
-			SELECT purchase_id, SUM(price * quantity) total
+			SELECT purchase_id, COUNT(id) count, SUM(price * quantity) total
 			FROM cl_purchase_item
 			WHERE del_flag = #{DEL_FLAG_NORMAL}
 			GROUP BY purchase_id

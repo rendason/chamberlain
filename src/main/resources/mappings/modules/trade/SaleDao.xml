@@ -18,7 +18,7 @@
 		u2.name AS "user.name",
 		m.name AS "member.name",
 		c.name AS "receipt.name",
-		IFNULL(d.count, 0) AS "quantity",
+		IFNULL(d.count, 0) AS "kind",
 		IFNULL(d.total, 0) AS "expected",
 		IFNULL(d.total * a.discount / 100 - a.exempt, 0) AS "actual"
 	</sql>

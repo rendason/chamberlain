@@ -24,7 +24,7 @@ public class Sale extends DataEntity<Sale> {
 	private User user;		// 销售员
 	private Member member;		// 会员
 	private Cash receipt;		// 收款方式
-	private Integer quantity;		// 数量
+	private Integer kind;		// 种类
 	private Integer discount;		// 折扣(%)
 	private Double exempt;		// 减免
 	private Double expected;		// 应收
@@ -65,12 +65,12 @@ public class Sale extends DataEntity<Sale> {
 		this.receipt = receipt;
 	}
 
-	public Integer getQuantity() {
-		return quantity;
+	public Integer getKind() {
+		return kind;
 	}
 
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
+	public void setKind(Integer kind) {
+		this.kind = kind;
 	}
 
 	public Integer getDiscount() {

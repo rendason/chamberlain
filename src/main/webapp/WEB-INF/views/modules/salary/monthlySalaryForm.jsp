@@ -109,7 +109,7 @@
 		<div class="control-group">
 			<label class="control-label">支付：</label>
 			<div class="controls">
-				<form:radiobuttons path="paid" items="${fns:getDictList('monthly_salary_paid')}" itemLabel="label" itemValue="value" htmlEscape="false" class="required" disabled="true"/>
+				<form:radiobuttons path="paid" items="${fns:getDictList('monthly_salary_paid')}" itemLabel="label" itemValue="value" htmlEscape="false" class="required" readonly="true"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
@@ -174,6 +174,7 @@
 								addRow('#monthlySalaryItemList', monthlySalaryItemRowIdx, monthlySalaryItemTpl, data[i]);
 								monthlySalaryItemRowIdx = monthlySalaryItemRowIdx + 1;
 							}
+							$(':radio[readonly]:not(:checked)').attr('disabled', true);
 						});
 						propertyChange($("#userId"), "value", function(userId){
                             $.get("${ctx}/salary/baseSalary/get?user.id=" + userId, function(res){
@@ -181,6 +182,7 @@
                                 monthlySalaryItemRowIdx = 0;
                                 var data = res.baseSalaryItemList;
                                 for (var i = 0; i < data.length; i++) {
+                                    delete data[i].id;
                                     data[i].coefficient = 1;
                                     addRow('#monthlySalaryItemList', monthlySalaryItemRowIdx, monthlySalaryItemTpl, data[i]);
                                     monthlySalaryItemRowIdx = monthlySalaryItemRowIdx + 1;

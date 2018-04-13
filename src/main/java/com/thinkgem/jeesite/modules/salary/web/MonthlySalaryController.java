@@ -29,6 +29,7 @@ import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.salary.entity.MonthlySalary;
 import com.thinkgem.jeesite.modules.salary.service.MonthlySalaryService;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,6 +75,8 @@ public class MonthlySalaryController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(MonthlySalary monthlySalary, Model model) {
 		if (monthlySalary.getPaid() == null) monthlySalary.setPaid(MonthlySalary.UNPAID);
+		if (monthlySalary.getYear() == null) monthlySalary.setYear(LocalDate.now().getYear());
+		if (monthlySalary.getMonth() == null) monthlySalary.setMonth(LocalDate.now().getMonthValue());
 		model.addAttribute("monthlySalary", monthlySalary);
 		model.addAttribute("payments", cashService.findList(new Cash()));
 		return "modules/salary/monthlySalaryForm";
