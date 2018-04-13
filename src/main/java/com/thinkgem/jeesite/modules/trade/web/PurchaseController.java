@@ -93,7 +93,7 @@ public class PurchaseController extends BaseController {
 			purchaseService.enough(purchase);
 			return true;
 		} catch (Exception e) {
-			addMessage(model, e.getMessage());
+			addMessage(model, "支付失败：", e.getMessage());
 			return false;
 		}
 	}

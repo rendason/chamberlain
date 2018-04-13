@@ -110,7 +110,7 @@ public class SaleController extends BaseController {
 			saleService.enough(sale);
 			return true;
 		} catch (Exception e) {
-			addMessage(model, e.getMessage().split(","));
+			addMessage(model, ("出库失败：" + e.getMessage()).split(","));
 			return false;
 		}
 	}
