@@ -28,7 +28,6 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/assets/fixedAssets/">固定资产列表</a></li>
-		<li class="active"><a href="${ctx}/assets/fixedAssets/form?id=${fixedAssets.id}">固定资产<shiro:hasPermission name="assets:fixedAssets:edit">${not empty fixedAssets.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="assets:fixedAssets:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="fixedAssets" action="${ctx}/assets/fixedAssets/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>

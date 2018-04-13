@@ -158,10 +158,10 @@
 								<input id="saleItemList{{idx}}_quantity" name="saleItemList[{{idx}}].quantity" type="number" value="{{row.quantity}}" min="1" class="input-small required digits" ${not empty sale.id?'disabled':''}/>
 							</td>
 							<td>
-								<input id="saleItemList{{idx}}_unit" name="saleItemList[{{idx}}].unit" type="text" value="{{row.unit}}" maxlength="20" class="input-small required" disabled/>
+								<input id="saleItemList{{idx}}_unit" name="saleItemList[{{idx}}].unit" type="text" value="{{row.unit}}" maxlength="20" class="input-small required" ${not empty sale.id?'disabled':'readonly'}/>
 							</td>
 							<td>
-								<input id="saleItemList{{idx}}_price" name="saleItemList[{{idx}}].price" type="text" value="{{row.price}}" class="input-small required number" disabled/>
+								<input id="saleItemList{{idx}}_price" name="saleItemList[{{idx}}].price" type="text" value="{{row.price}}" class="input-small required number" ${not empty sale.id?'disabled':'readonly'}/>
 							</td>
 							<td>
 								<input id="saleItemList{{idx}}_remarks" name="saleItemList[{{idx}}].remarks" type="text" value="{{row.remarks}}" maxlength="255" class="input-small" ${not empty sale.id?'disabled':''}/>
