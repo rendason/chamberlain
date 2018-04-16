@@ -71,7 +71,7 @@ public class CashService extends CrudService<CashDao, Cash> {
 					bill.setPayment(cash.getName());
 					bill.setAmount(-amount);
 					bill.setPayee(UserUtils.getUser().getName());
-					bill.setType(Bill.INCOME_TYPE);
+					bill.setType(Bill.EXPENSE_TYPE);
 					billService.save(bill);
 				}
 			}

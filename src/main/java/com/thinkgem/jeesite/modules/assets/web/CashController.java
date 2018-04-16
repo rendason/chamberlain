@@ -80,4 +80,20 @@ public class CashController extends BaseController {
 		return "redirect:"+Global.getAdminPath()+"/assets/cash/?repage";
 	}
 
+	@RequiresPermissions("assets:cash:edit")
+	@RequestMapping(value = "increase/form")
+	public String increaseForm(Cash cash, Model model) {
+		model.addAttribute("cash", cash);
+		model.addAttribute("operate", "increase");
+		return "modules/assets/cashForm";
+	}
+
+	@RequiresPermissions("assets:cash:edit")
+	@RequestMapping(value = "decrease/form")
+	public String decreaseForm(Cash cash, Model model) {
+		model.addAttribute("cash", cash);
+		model.addAttribute("operate", "decrease");
+		return "modules/assets/cashForm";
+	}
+
 }

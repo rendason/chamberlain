@@ -19,7 +19,7 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/assets/cash/">现金列表</a></li>
-		<shiro:hasPermission name="assets:cash:edit"><li><a href="${ctx}/assets/cash/form">现金添加</a></li></shiro:hasPermission>
+		<shiro:hasPermission name="assets:cash:edit"><li><a href="${ctx}/assets/cash/form">现金开户</a></li></shiro:hasPermission>
 	</ul>
 	<form:form id="searchForm" modelAttribute="cash" action="${ctx}/assets/cash/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -59,8 +59,9 @@
 					${cash.remarks}
 				</td>
 				<shiro:hasPermission name="assets:cash:edit"><td>
-    				<a href="${ctx}/assets/cash/form?id=${cash.id}">修改</a>
-					<a href="${ctx}/assets/cash/delete?id=${cash.id}" onclick="return confirmx('确认要删除该现金吗？', this.href)">删除</a>
+    				<a href="${ctx}/assets/cash/increase/form?id=${cash.id}">充值</a>
+    				<a href="${ctx}/assets/cash/decrease/form?id=${cash.id}">提现</a>
+					<a href="${ctx}/assets/cash/delete?id=${cash.id}" onclick="return confirmx('确认要删除该现金吗？', this.href)">销户</a>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

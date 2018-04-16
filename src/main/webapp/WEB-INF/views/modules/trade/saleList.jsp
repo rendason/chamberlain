@@ -46,7 +46,7 @@
 				<th>销售员</th>
 				<%-- <th>会员</th> --%>
 				<th>种类</th>
-				<th>应收</th>
+				<th>总额</th>
 				<th>折扣(%)</th>
 				<th>减免</th>
                 <th>实收</th>
@@ -78,7 +78,7 @@
 					${sale.exempt}
 				</td>
 				<td>
-					${sale.expected}×${sale.discount}%-${sale.exempt}=${sale.actual}
+					${sale.actual}
 				</td>
 				<td>
                     ${sale.receipt.name}

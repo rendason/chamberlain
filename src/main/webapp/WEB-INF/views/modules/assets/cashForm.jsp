@@ -23,16 +23,23 @@
 				}
 			});
 		});
+		function changeAmount() {
+            var amount = $("#amount");
+            amount.val(amount.val() - 0 ${operate=='increase'?'+':'-'} ($("#change").val() - 0));
+		}
 	</script>
 </head>
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/assets/cash/">现金列表</a></li>
-		<li class="active"><a href="${ctx}/assets/cash/form?id=${cash.id}">现金<shiro:hasPermission name="assets:cash:edit">${not empty cash.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="assets:cash:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/assets/cash/form?id=${cash.id}">
+		    现金<shiro:hasPermission name="assets:cash:edit">${not empty cash.id?(operate=='increase'?'充值':'提现') :'添加'}</shiro:hasPermission><shiro:lacksPermission name="assets:cash:edit">查看</shiro:lacksPermission>
+		</a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="cash" action="${ctx}/assets/cash/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<sys:message content="${message}"/>		
+		<form:hidden path="amount"/>
+		<sys:message content="${message}"/>
 		<div class="control-group">
 			<label class="control-label">名称：</label>
 			<div class="controls">
@@ -43,7 +50,7 @@
 		<div class="control-group">
 			<label class="control-label">金额：</label>
 			<div class="controls">
-				<form:input path="amount" htmlEscape="false" class="input-xlarge required number"/>
+				<input id="change" type="text" class="input-xlarge required number" onchange="changeAmount()" disable="true"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
