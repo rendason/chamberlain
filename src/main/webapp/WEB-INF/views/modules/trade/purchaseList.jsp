@@ -82,7 +82,7 @@
 					${purchase.remarks}
 				</td>
 				<shiro:hasPermission name="trade:purchase:edit"><td>
-    				<a href="${ctx}/trade/purchase/form?id=${purchase.id}">修改</a>
+    				<a href="${ctx}/trade/purchase/form?id=${purchase.id}">查看</a>
 					<a href="${ctx}/trade/purchase/delete?id=${purchase.id}" onclick="return confirmx('确认要删除该采购吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>
 			</tr>

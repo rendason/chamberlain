@@ -69,7 +69,7 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/trade/sale/">销售列表</a></li>
-		<li class="active"><a href="${ctx}/trade/sale/form?id=${sale.id}">销售<shiro:hasPermission name="trade:sale:edit">${not empty sale.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="trade:sale:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/trade/sale/form?id=${sale.id}">销售<shiro:hasPermission name="trade:sale:edit">${not empty sale.id?'查看':'添加'}</shiro:hasPermission><shiro:lacksPermission name="trade:sale:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="sale" action="${ctx}/trade/sale/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>

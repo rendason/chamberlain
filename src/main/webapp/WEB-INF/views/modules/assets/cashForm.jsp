@@ -33,7 +33,7 @@
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/assets/cash/">现金列表</a></li>
 		<li class="active"><a href="${ctx}/assets/cash/form?id=${cash.id}">
-		    现金<shiro:hasPermission name="assets:cash:edit">${not empty cash.id?(operate=='increase'?'充值':'提现') :'添加'}</shiro:hasPermission><shiro:lacksPermission name="assets:cash:edit">查看</shiro:lacksPermission>
+		    现金<shiro:hasPermission name="assets:cash:edit">${not empty cash.id?(operate=='increase'?'充值':'提现') :'开户'}</shiro:hasPermission><shiro:lacksPermission name="assets:cash:edit">查看</shiro:lacksPermission>
 		</a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="cash" action="${ctx}/assets/cash/save" method="post" class="form-horizontal">

@@ -79,6 +79,7 @@
 					${bill.remarks}
 				</td>
 				<shiro:hasPermission name="trade:bill:edit"><td>
+				    <a href="${ctx}/trade/bill/form?id=${bill.id}">查看</a>
 					<a href="${ctx}/trade/bill/delete?id=${bill.id}" onclick="return confirmx('确认要删除该账单吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>
 			</tr>

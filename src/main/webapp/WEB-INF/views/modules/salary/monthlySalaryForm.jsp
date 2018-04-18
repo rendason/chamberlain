@@ -69,7 +69,7 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/salary/monthlySalary/">月度薪资列表</a></li>
-		<li class="active"><a href="${ctx}/salary/monthlySalary/form?id=${monthlySalary.id}">月度薪资<shiro:hasPermission name="salary:monthlySalary:edit">${not empty monthlySalary.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="salary:monthlySalary:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/salary/monthlySalary/form?id=${monthlySalary.id}">月度薪资<shiro:hasPermission name="salary:monthlySalary:edit">${not empty monthlySalary.id?(monthlySalary.paid!=1?'修改':'查看'):'添加'}</shiro:hasPermission><shiro:lacksPermission name="salary:monthlySalary:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="monthlySalary" action="${ctx}/salary/monthlySalary/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>

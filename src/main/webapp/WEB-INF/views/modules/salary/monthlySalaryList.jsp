@@ -98,6 +98,7 @@
 				</td>
 				<shiro:hasPermission name="salary:monthlySalary:edit"><td>
 					<c:if test="${monthlySalary.paid!=1}"><a href="${ctx}/salary/monthlySalary/pay?id=${monthlySalary.id}" onclick="return confirmx('确认要支付该月度薪资吗？', this.href)">支付</a></c:if>
+					<a href="${ctx}/salary/monthlySalary/form?id=${monthlySalary.id}">${monthlySalary.paid!=1?'修改':'查看'}</a>
 					<a href="${ctx}/salary/monthlySalary/delete?id=${monthlySalary.id}" onclick="return confirmx('确认要删除该月度薪资吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>
 			</tr>
